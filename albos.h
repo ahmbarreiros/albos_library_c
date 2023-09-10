@@ -19,38 +19,78 @@ extern long abs_i(long x);
 
 extern double abs_f(double x);
 
-extern double max_arr_f(double* values, int size);
+extern int max_i(int x, int y);
 
-extern long max_arr_i(long* values, int size);
+extern int min_i(int x, int y);
 
-extern double pow_f(double base, int exponent);
+extern float max_arr_f(float* values, int size);
 
-extern long pow_i(long base, int exponent);
+extern int max_arr_i(int* values, int size);
 
-extern long sum_i(long* values, int size);
+extern double pow_f(float base, int exponent);
 
-extern double sum_f(double* values, int size);
+extern long pow_i(int base, int exponent);
+
+extern long sum_i(int* values, int size);
+
+extern double sum_f(float* values, int size);
 
 /* ERROR CALCULATIONS */
 
-extern double absolute_error(double value, double approximateValue);
+extern float absolute_error(float value, float approximateValue);
 
-extern double relative_error(double value, double approximateValue);
+extern double relative_error(float value, float approximateValue);
 
-extern double relative_error_ea(double value, double absoluteError);
+extern double relative_error_ea(float value, float absoluteError);
 
 extern int compare_error(double error1, double error2);
 
 /* VECTOR AND MATRICES NORMS */
 
-extern double euclidean_norm_f(double* values, int size);
+extern float euclidean_norm_f(float* values, int size);
 
-extern long euclidean_norm_i(long* values, int size);
+extern long euclidean_norm_i(int* values, int size);
 
-extern double maximum_norm_f(double* values, int size);
+// TODO: testar
+extern float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
+				       float* valuesVectorB, int sizeVectorB);
 
-extern long maximum_norm_i(long* values, int size);
+// TODO: testar
+extern long euclidean_norm_distance_i(int* valuesVectorA, int sizeVectorA,
+				      int* valuesVectorB, int sizeVectorB);
+// TODO: testar  
+extern float maximum_norm_f(float* values, int size);
 
-extern double sum_norm_f(double* values, int size);
+// TODO: testar
+extern int maximum_norm_i(int* values, int size);
 
-extern long sum_norm_i(long* values, int size);
+// TODO: testar
+extern float maximum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
+				     float* valuesVectorB, int sizeVectorB);
+// TODO: testar
+extern int maximum_norm_distance_i(int* valuesVectorA, int sizeVectorA,
+				   int* valuesVectorB, int sizeVectorB);
+
+extern float sum_norm_f(float* values, int size);
+
+extern long sum_norm_i(int* values, int size);
+
+// TODO: testar
+extern float sum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
+				 float* valuesVectorB, int sizeVectorB);
+
+// TODO: testar
+extern int sum_norm_distance_i(int* valuesVectorA, int sizeVectorA,
+			       int* valuesVectorB, int sizeVectorB);
+
+extern float frobenius_norm_f(float* values, int sizeRows, int sizeColumns);
+
+extern long frobenius_norm_i(int* values, int sizeRows, int sizeColumns);
+
+extern float row_maximum_norm_f(float** values, int sizeRows, int sizeColumns);
+
+extern long row_maximum_norm_i(int** values, int sizeRows, int sizeColumns);
+
+extern float column_maximum_norm_f(float* values[], int sizeRows, int sizeColumns);
+
+extern long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns);

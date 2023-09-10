@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include "albos.h"
 
-#define INF_DOUBLE (1 << (sizeof(double))) - 1
-#define INF (1L <<(sizeof(long))) - 1
+#define INF_FLOAT (1 << (sizeof(float))) - 1
+#define INF (1L <<(sizeof(int))) - 1
 
 long abs_i(long x) {
   if(x >= 0) return x;
@@ -14,8 +14,18 @@ double abs_f(double x) {
   else return -x;
 }
 
-double max_arr_f(double* values, int size) {  // TODO: testar
-  double max = -INF_DOUBLE;
+int max_i(int x, int y) {
+  if(x > y) return x;
+  else return y;
+}
+
+int min_i(int x, int y) {
+  if(x <= y) return x;
+  else return y;
+}
+
+float max_arr_f(float* values, int size) { 
+  float max = -INF_FLOAT;
   for(int i = 0; i < size; i++) {
     if(values[i] > max) {
       max = values[i];
@@ -24,8 +34,8 @@ double max_arr_f(double* values, int size) {  // TODO: testar
   return max;
 }
 
-long max_arr_i(long* values, int size) {  // TODO: testar
-  long max = -INF;
+int max_arr_i(int* values, int size) {  
+  int max = -INF;
   for(int i = 0; i < size; i++) {
     if(values[i] > max) {
       max = values[i];
@@ -34,7 +44,7 @@ long max_arr_i(long* values, int size) {  // TODO: testar
   return max;
 }
 
-double pow_f(double base, int exponent) {  // TODO: testar
+double pow_f(float base, int exponent) {  
   int isNegative = 0;
   double raised = 1;
   if(exponent == 0) return 1;
@@ -42,6 +52,8 @@ double pow_f(double base, int exponent) {  // TODO: testar
    isNegative = 1;
    exponent = abs_i(exponent);
   }
+  if(exponent == 1) return base;
+  else if(exponent == 2) return (base*base);
   for(int i = 0; i < exponent; i++) {
     raised *= base;
   }
@@ -52,7 +64,7 @@ double pow_f(double base, int exponent) {  // TODO: testar
   }
 }
 
-long pow_i(long base, int exponent) {  // TODO: testar
+long pow_i(int base, int exponent) { 
   int isNegative = 0;
   long raised = 1;
   if(exponent == 0) return 1;
@@ -60,6 +72,8 @@ long pow_i(long base, int exponent) {  // TODO: testar
    isNegative = 1;
    exponent = abs_i(exponent);
   }
+  if(exponent == 1) return base;
+  else if(exponent == 2) return (base*base);
   for(int i = 0; i < exponent; i++) {
     raised *= base;
   }
@@ -70,7 +84,7 @@ long pow_i(long base, int exponent) {  // TODO: testar
   }
 }
 
-long sum_i(long* values, int size) {  // TODO: testar
+long sum_i(int* values, int size) {  
   long sum = 0;
   for(int i = 0; i < size; i++) {
     sum += values[i];
@@ -78,7 +92,7 @@ long sum_i(long* values, int size) {  // TODO: testar
   return sum;
 }
 
-double sum_f(double* values, int size) {  // TODO: testar
+double sum_f(float* values, int size) {  
   double sum = 0.0;
   for(int i = 0; i < size; i++) {
     sum += values[i];
@@ -91,11 +105,11 @@ double sum_f(double* values, int size) {  // TODO: testar
 
 /* ERROR CALCULATIONS */
 
-double absolute_error(double value, double approximateValue) {
+float absolute_error(float value, float approximateValue) {
   return abs_f(value - approximateValue);
 }
 
-double relative_error(double value, double approximateValue) {
+double relative_error(float value, float approximateValue) {
   if(value) {
     return (absolute_error(value, approximateValue) / value);
   } else {
@@ -104,7 +118,7 @@ double relative_error(double value, double approximateValue) {
   }
 }
 
-double relative_error_ea(double value, double absoluteError) {
+double relative_error_ea(float value, float absoluteError) {
   if(value) {
     return (absoluteError / value);
   } else {
@@ -118,17 +132,17 @@ int compare_error(double error1, double error2) {
 }
 
 
-/* VECTOR AND MATRICES NORMS */
+/* VECTOR NORMS */
 
-double euclidean_norm_f(double* values, int size) {  // TODO: testar
-  double sum = 0.0;
+float euclidean_norm_f(float* values, int size) { 
+  float sum = 0.0;
   for(int i = 0; i < size; i++) {
     sum += pow_f(values[i], 2);
   }
   return sum;
 }
 
-long euclidean_norm_i(long* values, int size) {  // TODO: testar
+long euclidean_norm_i(int* values, int size) {  
   long sum = 0;
   for(int i = 0; i < size; i++) {
     sum += pow_i(values[i], 2);
@@ -136,26 +150,240 @@ long euclidean_norm_i(long* values, int size) {  // TODO: testar
   return sum;
 }
 
-double maximum_norm_f(double* values, int size) {  // TODO: testar
-  return max_arr_f(values, size);
+float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
+				float* valuesVectorB, int sizeVectorB) {
+  float sum = 0.0;
+  int biggest = max_i(sizeVectorA, sizeVectorB);
+  int smallest = min_i(sizeVectorA, sizeVectorB);
+  for(int i = 0; i < biggest; i++) {
+    if(i <= smallest) {
+      sum += pow_f((valuesVectorA[i] - valuesVectorB[i]), 2);
+    } else if(smallest == sizeVectorA) {
+      sum += pow_f(valuesVectorA[i], 2);
+    } else if(smallest == sizeVectorB){
+      sum += pow_f(valuesVectorB[i], 2);
+    }
+  }
+  return sum;
 }
 
-long maximum_norm_i(long* values, int size) {  // TODO: testar
-  return max_arr_i(values, size);
+long euclidean_norm_distance_i(int* valuesVectorA, int sizeVectorA,
+			       int* valuesVectorB, int sizeVectorB) {
+  long sum = 0;
+  int biggest = max_i(sizeVectorA, sizeVectorB);
+  int smallest = min_i(sizeVectorA, sizeVectorB);
+  for(int i = 0; i < biggest; i++) {
+    if(i <= smallest) {
+      sum += pow_i((valuesVectorA[i] - valuesVectorB[i]), 2);
+    } else if(smallest == sizeVectorA) {
+      sum += pow_i(valuesVectorA[i], 2);
+    } else if(smallest == sizeVectorB){
+      sum += pow_i(valuesVectorB[i], 2);
+    }
+  }
+  return sum;
 }
 
-double sum_norm_f(double* values, int size) {  // TODO: testar
-  double sum = 0.0;
+float maximum_norm_f(float* values, int size) { 
+  float max = -INF_FLOAT;
+  for(int i = 0; i < size; i++) {
+    if(max < abs_i(values[i])) {
+      max = abs_i(values[i]);
+    }
+  }
+  if(max != -INF_FLOAT) return max;
+  else return -1.0;
+}
+
+int maximum_norm_i(int* values, int size) {
+  int max = -INF;
+  for(int i = 0; i < size; i++) {
+    if(max < abs_i(values[i])) {
+      max = abs_i(values[i]);
+    }
+  }
+  if(max != -INF) return max;
+  else return -1;
+}
+
+float maximum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
+			      float* valuesVectorB, int sizeVectorB) {
+  float max = -INF_FLOAT;
+  int biggest = max_i(sizeVectorA, sizeVectorB);
+  int smallest = min_i(sizeVectorA, sizeVectorB);
+  float currentValue = 0.0;
+  for(int i = 0; i < biggest; i++) {
+    currentValue = 0.0;
+    if(i <= smallest) {
+      currentValue = abs_f(valuesVectorA[i] - valuesVectorB[i]);
+    } else if(smallest == sizeVectorA) {
+	currentValue = abs_f(valuesVectorA[i]);
+    } else if(smallest == sizeVectorB){
+	currentValue = abs_f(valuesVectorB[i]);
+    }
+    if(currentValue > max) {
+      max = currentValue;
+    }
+  }
+  if(max != -INF_FLOAT) return max;
+  else return -1.0;
+}
+
+
+int maximum_norm_distance_i(int* valuesVectorA, int sizeVectorA,
+			      int* valuesVectorB, int sizeVectorB) {
+  int max = -INF;
+  int biggest = max_i(sizeVectorA, sizeVectorB);
+  int smallest = min_i(sizeVectorA, sizeVectorB);
+  int currentValue = 0;
+  for(int i = 0; i < biggest; i++) {
+    currentValue = 0.0;
+    if(i <= smallest) {
+      currentValue = abs_f(valuesVectorA[i] - valuesVectorB[i]);
+    } else if(smallest == sizeVectorA) {
+	currentValue = abs_f(valuesVectorA[i]);
+    } else if(smallest == sizeVectorB){
+	currentValue = abs_f(valuesVectorB[i]);
+    }
+    if(currentValue > max) {
+      max = currentValue;
+    }
+  }
+  if(max != -INF) return max;
+  else return -1;
+}
+
+float sum_norm_f(float* values, int size) {  
+  float sum = 0.0;
   for(int i = 0; i < size; i++) {
     sum += abs_f(values[i]);
   }
   return sum;
 }
 
-long sum_norm_i(long* values, int size) { // TODO: testar
+long sum_norm_i(int* values, int size) { 
   long sum = 0;
   for(int i = 0; i < size; i++) {
     sum += abs_i(values[i]);
   }
   return sum;
 }
+
+
+float sum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
+			  float* valuesVectorB, int sizeVectorB) {  
+  float sum = 0.0;
+  int biggest = max_i(sizeVectorA, sizeVectorB);
+  int smallest = min_i(sizeVectorA, sizeVectorB);
+  for(int i = 0; i < biggest; i++) {
+    if(i <= smallest) {
+      sum += abs_f(valuesVectorA[i] - valuesVectorB[i]);
+    } else if(smallest == sizeVectorA) {
+      sum += abs_f(valuesVectorA[i]);
+    } else if(smallest == sizeVectorB) {
+      sum += abs_f(valuesVectorB[i]);
+    }
+  }
+  return sum;
+}
+
+
+int sum_norm_distance_i(int* valuesVectorA, int sizeVectorA,
+			int* valuesVectorB, int sizeVectorB) {  
+  int sum = 0.0;
+  int biggest = max_i(sizeVectorA, sizeVectorB);
+  int smallest = min_i(sizeVectorA, sizeVectorB);
+  for(int i = 0; i < biggest; i++) {
+    if(i <= smallest) {
+      sum += abs_f(valuesVectorA[i] - valuesVectorB[i]);
+    } else if(smallest == sizeVectorA) {
+      sum += abs_f(valuesVectorA[i]);
+    } else if(smallest == sizeVectorB) {
+      sum += abs_f(valuesVectorB[i]);
+    }
+  }
+  return sum;
+}
+
+/* MATRICES NORMS */
+
+float frobenius_norm_f(float* values, int sizeRows, int sizeColumns) {
+  float sum = 0.0;
+  for(int i = 0; i < sizeRows; i++) {
+    for(int j = 0; j < sizeColumns; j++) {
+      sum += pow_f(values[i*sizeColumns + j], 2);
+    }
+  }
+  return sum;
+}
+
+long frobenius_norm_i(int* values, int sizeRows, int sizeColumns) {
+  long sum = 0;
+  for(int i = 0; i < sizeRows; i++) {
+    for(int j = 0; j < sizeColumns; j++) {
+      sum += pow_i(values[i*sizeColumns + j], 2);
+    }
+  }
+  return sum;
+}
+
+float row_maximum_norm_f(float** values, int sizeRows, int sizeColumns) {
+  float sum = 0.0;
+  float maxSum = -INF_FLOAT;
+  for(int i = 0; i < sizeRows; i++) {
+    sum = 0.0;
+    for(int j = 0; j < sizeColumns; j++) {
+      sum += abs_f(values[i][j]);
+    }
+    if(maxSum < sum) {
+      maxSum = sum;
+    }
+  }
+  return maxSum;
+}
+
+long row_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
+  long sum = 0;
+  long maxSum = -INF;
+  for(int i = 0; i < sizeRows; i++) {
+    sum = 0;
+    for(int j = 0; j < sizeColumns; j++) {
+      sum += abs_i(values[i][j]);
+    }
+    if(maxSum < sum) {
+      maxSum = sum;
+    }
+  }
+  return maxSum;
+}
+
+float column_maximum_norm_f(float* values[], int sizeRows, int sizeColumns) {
+  float sum = 0.0;
+  float maxSum = -INF_FLOAT;
+  for(int j = 0; j < sizeColumns ; j++) {
+    sum = 0.0;
+    for(int i = 0; i < sizeRows; i++) {
+      sum += abs_f(values[i][j]);
+    }
+    if(maxSum < sum) {
+      maxSum = sum;
+    }
+  }
+  return maxSum;
+}
+
+long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
+  long sum = 0;
+  long maxSum = -INF;
+  for(int j = 0; j < sizeColumns; j++) {
+    sum = 0;
+    for(int i = 0; i < sizeRows; i++) {
+      sum += abs_i(values[i][j]);
+    }
+    if(maxSum < sum) {
+      maxSum = sum;
+    }
+  }
+  return maxSum;
+}
+

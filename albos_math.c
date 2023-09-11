@@ -187,8 +187,8 @@ long euclidean_norm_distance_i(int* valuesVectorA, int sizeVectorA,
 float maximum_norm_f(float* values, int size) { 
   float max = -INF_FLOAT;
   for(int i = 0; i < size; i++) {
-    if(max < abs_i(values[i])) {
-      max = abs_i(values[i]);
+    if(max < abs_f(values[i])) {
+      max = abs_f(values[i]);
     }
   }
   if(max != -INF_FLOAT) return max;

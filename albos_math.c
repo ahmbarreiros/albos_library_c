@@ -387,3 +387,46 @@ long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
   return maxSum;
 }
 
+float* gauss(float* mat, int size) {
+  int k = 0, i = 0, j = 0;
+  float m = 0;
+  /* for(int rows = 0; rows < size; rows++) { */
+  /*   for(int columns = 0; columns < size+1; columns++) { */
+  /*     printf("%f ", mat[rows*(size+1) + columns]); */
+  /*   } */
+  /*   printf("\n"); */
+  /* } */
+  
+  for(k = 0; k < size; k++) {
+    for(i = k + 1; i < size + 1; i++) {
+      //printf("mat1 = %f\n", mat[i*(size+1) + k]);
+      //printf("\t %f / %f\n", mat[i*(size+1) + k], mat[k*(size+1) + k]);
+      m = mat[i*(size+1) + k] / mat[k*(size+1) + k];
+      //printf("mat2 = %f\n", mat[k*(size+1) + k]);
+      //printf("m = %f\n", m);
+      // mat[i*(size + 1) + k] = 0;
+      
+      for(j = k; j < size+2; j++) {
+	//printf("mat3 = %f\n", mat[i*(size+1) + j]);
+	mat[i*(size + 1) + j] = mat[i*(size + 1) + j] - (m * mat[k*(size + 1) + j]);
+	//printf("mat4 = %f\n", mat[i*(size+1) + j]);
+	for(int rows = 0; rows < size; rows++) {
+	  for(int columns = 0; columns < size+1; columns++) {
+	    //printf("%f ", mat[rows*(size+1) + columns]);
+	  }
+	  //printf("\n");
+	}
+	//printf("\n");
+      }
+    }
+    
+  }
+
+  for(int rows = 0; rows < size; rows++) {
+    for(int columns = 0; columns < size+1; columns++) {
+      printf("%f ", mat[rows*(size+1) + columns]);
+    }
+    printf("\n");
+  }
+  return mat;
+}

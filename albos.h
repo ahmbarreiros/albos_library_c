@@ -95,3 +95,4 @@ extern float column_maximum_norm_f(float* values[], int sizeRows, int sizeColumn
 
 extern long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns);
 
+extern float* gauss(float* mat, int size);

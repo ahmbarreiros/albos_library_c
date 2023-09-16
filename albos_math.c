@@ -388,7 +388,7 @@ long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
   return maxSum;
 }
 
-float* gauss(float* mat, int size) {
+float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {
   int k = 0, i = 0, j = 0;
   float m = 0;
   /* for(int rows = 0; rows < size; rows++) { */
@@ -398,37 +398,38 @@ float* gauss(float* mat, int size) {
   /*   printf("\n"); */
   /* } */
   
-  for(k = 0; k < size; k++) {
-    for(i = k + 1; i < size + 1; i++) {
+  for(k = 0; k < sizeRows; k++) {
+    for(i = k + 1; i < sizeColumns; i++) {
       //printf("mat1 = %f\n", mat[i*(size+1) + k]);
       //printf("\t %f / %f\n", mat[i*(size+1) + k], mat[k*(size+1) + k]);
-      m = mat[i*(size+1) + k] / mat[k*(size+1) + k];
+      m = mat[i*(sizeColumns) + k] / mat[k*(sizeColumns) + k];
       //printf("mat2 = %f\n", mat[k*(size+1) + k]);
       //printf("m = %f\n", m);
       // mat[i*(size + 1) + k] = 0;
       
-      for(j = k; j < size+2; j++) {
+      for(j = k; j < sizeColumns+1; j++) {
 	//printf("mat3 = %f\n", mat[i*(size+1) + j]);
-	mat[i*(size + 1) + j] = mat[i*(size + 1) + j] - (m * mat[k*(size + 1) + j]);
+	mat[i*(sizeColumns) + j] = mat[i*(sizeColumns) + j] - (m * mat[k*(sizeColumns) + j]);
 	//printf("mat4 = %f\n", mat[i*(size+1) + j]);
-	for(int rows = 0; rows < size; rows++) {
-	  for(int columns = 0; columns < size+1; columns++) {
-	    //printf("%f ", mat[rows*(size+1) + columns]);
+	for(int rows = 0; rows < sizeRows; rows++) {
+	  for(int columns = 0; columns < sizeColumns; columns++) {
+	    printf("%f ", mat[rows*(sizeColumns) + columns]);
 	  }
-	  //printf("\n");
+	  printf("\n");
 	}
-	//printf("\n");
+	printf("\n");
       }
     }
     
   }
 
-  /* for(int rows = 0; rows < size; rows++) { */
-  /*   for(int columns = 0; columns < size+1; columns++) { */
-  /*     printf("%f ", mat[rows*(size+1) + columns]); */
-  /*   } */
-  /*   printf("\n"); */
-  /* } */
+  for(int rows = 0; rows < sizeRows; rows++) {
+    for(int columns = 0; columns < sizeColumns; columns++) {
+      printf("%f ", mat[rows*(sizeColumns) + columns]);
+    }
+    printf("\n");
+  }
+  printf("cabou\n");
   return mat;
 }
 
@@ -437,17 +438,14 @@ void gauss_resolution(float* mat, int size) {
   float m = 0, s = 0;
   float *x = malloc(size * sizeof(float));
   for(i = 0; i < size; i++) {
-    for(j = 0; j < size+1; j++) {
-      x[i*(size+1) + j] = 0;
-    }
+    x[i] = 0;
   }
-  for(int rows = 0; rows < size; rows++) {
-    for(int columns = 0; columns < size+1; columns++) {
-      printf("%f ", x[rows*(size+1) + columns]);
-    }
-    printf("\n");
-  }
-  printf("\n");
+  /* printf("1\n"); */
+  /* for(int rows = 0; rows < size; rows++) { */
+  /*   printf("%f ", x[rows]); */
+  /*   printf("\n"); */
+  /* } */
+  /* printf("\n"); */
 
   for(k = 0; k < size; k++) {
     for(i = k + 1; i < size+1; i++) {
@@ -456,22 +454,38 @@ void gauss_resolution(float* mat, int size) {
 	mat[i*(size+1) + j] = mat[i*(size+1) + j] - (m*mat[k*(size+1) + j]);
       }
     }
-    printf("%d\n", x[size]);
-    x[size] = mat[size*(size+1) + size+1] / mat[size*(size+1) + size];
-    for(i = size-1; i > 0; i--) {
+    printf("\tafter\n");
+    /* for(int rows = 0; rows < size; rows++) { */
+    /*   for(int columns = 0; columns < size+1; columns++) { */
+    /* 	printf("%f ", mat[rows*(size+1) + columns]); */
+    /*   } */
+    /*   printf("\n"); */
+    /* } */
+    //printf("cabou\n");
+    //printf("%f\n", x[size-1]);
+    printf("\t %f / %f\n", mat[size*size + size-1], mat[size*size + size-2]);
+    x[size-1] = mat[size*size + size-1] / mat[size*size + size-2];
+    printf("%f\n", x[size-1]);
+    for(i = size-2; i >= 0; i--) {
       s = 0;
-      for(j = i+1; j < size+1; j++) {
+      for(j = i+1; j < size; j++) {
+	printf("\tantes: %f\n", s);
 	s = s + mat[i*(size+1) + j] * x[j];
+	printf("\tdepois: %f\n", s);
       }
-      x[i] = (mat[i*(size+1) + size+1] - s) / mat[i*(size+1) + i];
+      printf("\tantes X: %f\n", x[i]);
+      x[i] = (mat[i*(size+1) + size] - s) / mat[i*(size+1) + i];
+      printf("\tdepois X: %f\n", x[i]);
     }
   }
 
   for(int rows = 0; rows < size; rows++) {
-    for(int columns = 0; columns < size+1; columns++) {
-      printf("%f ", x[rows*(size+1) + columns]);
-    }
+    
+    printf("%f ", x[rows]);
+    
     printf("\n");
   }
+
+  //TODO: norm(a*x-b)
   free(x);
 }

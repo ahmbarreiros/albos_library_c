@@ -391,33 +391,11 @@ long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
 float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {
   int k = 0, i = 0, j = 0;
   float m = 0;
-  /* for(int rows = 0; rows < size; rows++) { */
-  /*   for(int columns = 0; columns < size+1; columns++) { */
-  /*     printf("%f ", mat[rows*(size+1) + columns]); */
-  /*   } */
-  /*   printf("\n"); */
-  /* } */
-  
   for(k = 0; k < sizeRows; k++) {
     for(i = k + 1; i < sizeColumns; i++) {
-      //printf("mat1 = %f\n", mat[i*(size+1) + k]);
-      //printf("\t %f / %f\n", mat[i*(size+1) + k], mat[k*(size+1) + k]);
       m = mat[i*(sizeColumns) + k] / mat[k*(sizeColumns) + k];
-      //printf("mat2 = %f\n", mat[k*(size+1) + k]);
-      //printf("m = %f\n", m);
-      // mat[i*(size + 1) + k] = 0;
-      
       for(j = k; j < sizeColumns+1; j++) {
-	//printf("mat3 = %f\n", mat[i*(size+1) + j]);
 	mat[i*(sizeColumns) + j] = mat[i*(sizeColumns) + j] - (m * mat[k*(sizeColumns) + j]);
-	//printf("mat4 = %f\n", mat[i*(size+1) + j]);
-	/* for(int rows = 0; rows < sizeRows; rows++) { */
-	/*   for(int columns = 0; columns < sizeColumns; columns++) { */
-	/*     printf("%f ", mat[rows*(sizeColumns) + columns]); */
-	/*   } */
-	/*   printf("\n"); */
-	/* } */
-	/* printf("\n"); */
       }
     }
     
@@ -429,24 +407,17 @@ float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {
     }
     printf("\n");
   }
-  //printf("cabou\n");
+  printf("\n");
   return mat;
 }
 
 void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
   int k = 0, i = 0, j = 0;
   float m = 0, s = 0;
-  float *x = malloc(sizeRows * sizeof(float));
+  float *x = malloc(sizeColumns * sizeof(float));
   for(i = 0; i < sizeRows; i++) {
     x[i] = 0;
   }
-  /* printf("1\n"); */
-  /* for(int rows = 0; rows < size; rows++) { */
-  /*   printf("%f ", x[rows]); */
-  /*   printf("\n"); */
-  /* } */
-  /* printf("\n"); */
-
   for(k = 0; k < sizeRows; k++) {
     for(i = k + 1; i < sizeColumns; i++) {
       m = mat[i * (sizeColumns) + k] / mat[k*(sizeColumns) + k];
@@ -454,28 +425,13 @@ void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
 	mat[i*(sizeColumns) + j] = mat[i*(sizeColumns) + j] - (m*mat[k*(sizeColumns) + j]);
       }
     }
-    printf("\tafter\n");
-    /* for(int rows = 0; rows < size; rows++) { */
-    /*   for(int columns = 0; columns < size+1; columns++) { */
-    /* 	printf("%f ", mat[rows*(size+1) + columns]); */
-    /*   } */
-    /*   printf("\n"); */
-    /* } */
-    //printf("cabou\n");
-    //printf("%f\n", x[size-1]);
-    printf("\t %f / %f\n", mat[sizeRows*sizeRows + sizeRows-1], mat[sizeRows*sizeRows + sizeRows-2]);
     x[sizeRows-1] = mat[sizeRows*sizeRows + sizeRows-1] / mat[sizeRows*sizeRows + sizeRows-2];
-    printf("%f\n", x[sizeRows-1]);
     for(i = sizeRows-2; i >= 0; i--) {
       s = 0;
       for(j = i+1; j < sizeRows; j++) {
-	printf("\tantes: %f\n", s);
 	s = s + mat[i*(sizeColumns) + j] * x[j];
-	printf("\tdepois: %f\n", s);
       }
-      printf("\tantes X: %f\n", x[i]);
       x[i] = (mat[i*(sizeColumns) + sizeRows] - s) / mat[i*(sizeColumns) + i];
-      printf("\tdepois X: %f\n", x[i]);
     }
   }
 
@@ -485,7 +441,7 @@ void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
     
     printf("\n");
   }
-
+  printf("\n");
   //TODO: norm(a*x-b)
   free(x);
 }

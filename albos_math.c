@@ -256,10 +256,43 @@ double sum_f(float* arr, int size) {
 
 /** ERROR CALCULATIONS */
 
+
+/**
+ * @brief Calculates the absolute error between the real value and approximate value..
+ *
+ * Used for error measurement, given the real value and approximate value, computates
+ * the absolute error.
+ *
+ * @param  (float) value           : Real value of a measurement.
+ * @param  (float) approximateValue: Approximate value of a measurement.
+ * @return (float) The absolute error of the approximate value.
+ *
+ * @see relative_error()    for relative error measurement.
+ * @see relative_error_ea() for calculating relative error using an absolute error.
+ *  @see compare_error()    for comparing two errors.
+ */
 float absolute_error(float value, float approximateValue) {
   return abs_f(value - approximateValue);
 }
 
+
+/**
+ * @brief Calculates the relative error between the real value and approximate value.
+ *
+ * Used for error measurement, given the real value and approximate value, computates
+ * the relative error.
+ * This calculation illustrates the "quality" of the error. This differs from absolute
+ * error, where absolute error does not takes in consideration the order of magnitude
+ * of the value being calculated.
+ *
+ * @param  (float) value           : Real value of a measurement.
+ * @param  (float) approximateValue: Approximate value of a measurement.
+ * @return (float) The relative error of the approximate value.
+ *
+ * @see absolute_error()    for absolute error measurement.
+ * @see relative_error_ea() for calculating the relative error using an absolute error.
+ * @see compare_error()     for comparing two errors.
+ */
 double relative_error(float value, float approximateValue) {
   if(value) {
     return (absolute_error(value, approximateValue) / value);
@@ -269,6 +302,25 @@ double relative_error(float value, float approximateValue) {
   }
 }
 
+
+/**
+ * @brief Calculates the relative error between the real value and an absolute error.
+ *
+ * Used for error measurement, given the real value and absolute error, computates
+ * the relative error.
+ * The absolute error is the absolute difference between the real value and approximate value. 
+ * This calculation illustrates the "quality" of the error. This differs from absolute
+ * error, where absolute error does not takes in consideration the order of magnitude
+ * of the value being calculated.
+ *
+ * @param  (float) value           : Real value of a measurement.
+ * @param  (float) absoluteError: Absolute error of a measurement.
+ * @return (float) The relative error of the measurement.
+ *
+ * @see absolute_error() for absolute error measurement.
+ * @see relative_error() for calculating the relative error using an approximate value.
+ * @see compare_error()  for comparing two errors.
+ */
 double relative_error_ea(float value, float absoluteError) {
   if(value) {
     return (absoluteError / value);
@@ -278,12 +330,28 @@ double relative_error_ea(float value, float absoluteError) {
   }
 }
 
+
+/**
+ * @brief Compare two error measurements of the same kind.
+ *
+ * @param  (float) error1: The first error measurement..
+ * @param  (float) error2: The second error measurement.
+ * @return (int)   The number representing the error. 1 represents the parameter error1, 2 represents the parameter error2.
+ *
+ * @warning beware of which kind of error measurements are being compared, if an absolute error is being compared with an relative error, issues may appear.
+ * @see absolute_error()    for absolute error measurement.
+ * @see relative_error()    for calculating the relative error using an approximate value.
+ * @see absolute_error_ea() for calculating the relative error using an absolute error.
+ */
 int compare_error(double error1, double error2) {
   return (error1 < error2 ? 1 : 2);
 }
 
 
-/* VECTOR NORMS */
+
+
+
+/** VECTOR NORMS */
 
 float euclidean_norm_f(float* values, int size) { 
   float sum = 0.0;

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "albos.h"
 
 #define INF_FLOAT (1 << (sizeof(float))) - 1
@@ -422,11 +423,55 @@ float* gauss(float* mat, int size) {
     
   }
 
+  /* for(int rows = 0; rows < size; rows++) { */
+  /*   for(int columns = 0; columns < size+1; columns++) { */
+  /*     printf("%f ", mat[rows*(size+1) + columns]); */
+  /*   } */
+  /*   printf("\n"); */
+  /* } */
+  return mat;
+}
+
+void gauss_resolution(float* mat, int size) {
+  int k = 0, i = 0, j = 0;
+  float m = 0, s = 0;
+  float *x = malloc(size * sizeof(float));
+  for(i = 0; i < size; i++) {
+    for(j = 0; j < size+1; j++) {
+      x[i*(size+1) + j] = 0;
+    }
+  }
   for(int rows = 0; rows < size; rows++) {
     for(int columns = 0; columns < size+1; columns++) {
-      printf("%f ", mat[rows*(size+1) + columns]);
+      printf("%f ", x[rows*(size+1) + columns]);
     }
     printf("\n");
   }
-  return mat;
+  printf("\n");
+
+  for(k = 0; k < size; k++) {
+    for(i = k + 1; i < size+1; i++) {
+      m = mat[i * (size + 1) + k] / mat[k*(size+1) + k];
+      for(j = k; j < size+2; j++) {
+	mat[i*(size+1) + j] = mat[i*(size+1) + j] - (m*mat[k*(size+1) + j]);
+      }
+    }
+    printf("%d\n", x[size]);
+    x[size] = mat[size*(size+1) + size+1] / mat[size*(size+1) + size];
+    for(i = size-1; i > 0; i--) {
+      s = 0;
+      for(j = i+1; j < size+1; j++) {
+	s = s + mat[i*(size+1) + j] * x[j];
+      }
+      x[i] = (mat[i*(size+1) + size+1] - s) / mat[i*(size+1) + i];
+    }
+  }
+
+  for(int rows = 0; rows < size; rows++) {
+    for(int columns = 0; columns < size+1; columns++) {
+      printf("%f ", x[rows*(size+1) + columns]);
+    }
+    printf("\n");
+  }
+  free(x);
 }

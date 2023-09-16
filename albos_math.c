@@ -411,13 +411,13 @@ float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {
 	//printf("mat3 = %f\n", mat[i*(size+1) + j]);
 	mat[i*(sizeColumns) + j] = mat[i*(sizeColumns) + j] - (m * mat[k*(sizeColumns) + j]);
 	//printf("mat4 = %f\n", mat[i*(size+1) + j]);
-	for(int rows = 0; rows < sizeRows; rows++) {
-	  for(int columns = 0; columns < sizeColumns; columns++) {
-	    printf("%f ", mat[rows*(sizeColumns) + columns]);
-	  }
-	  printf("\n");
-	}
-	printf("\n");
+	/* for(int rows = 0; rows < sizeRows; rows++) { */
+	/*   for(int columns = 0; columns < sizeColumns; columns++) { */
+	/*     printf("%f ", mat[rows*(sizeColumns) + columns]); */
+	/*   } */
+	/*   printf("\n"); */
+	/* } */
+	/* printf("\n"); */
       }
     }
     
@@ -429,15 +429,15 @@ float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {
     }
     printf("\n");
   }
-  printf("cabou\n");
+  //printf("cabou\n");
   return mat;
 }
 
-void gauss_resolution(float* mat, int size) {
+void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
   int k = 0, i = 0, j = 0;
   float m = 0, s = 0;
-  float *x = malloc(size * sizeof(float));
-  for(i = 0; i < size; i++) {
+  float *x = malloc(sizeRows * sizeof(float));
+  for(i = 0; i < sizeRows; i++) {
     x[i] = 0;
   }
   /* printf("1\n"); */
@@ -447,11 +447,11 @@ void gauss_resolution(float* mat, int size) {
   /* } */
   /* printf("\n"); */
 
-  for(k = 0; k < size; k++) {
-    for(i = k + 1; i < size+1; i++) {
-      m = mat[i * (size + 1) + k] / mat[k*(size+1) + k];
-      for(j = k; j < size+2; j++) {
-	mat[i*(size+1) + j] = mat[i*(size+1) + j] - (m*mat[k*(size+1) + j]);
+  for(k = 0; k < sizeRows; k++) {
+    for(i = k + 1; i < sizeColumns; i++) {
+      m = mat[i * (sizeColumns) + k] / mat[k*(sizeColumns) + k];
+      for(j = k; j < sizeColumns+1; j++) {
+	mat[i*(sizeColumns) + j] = mat[i*(sizeColumns) + j] - (m*mat[k*(sizeColumns) + j]);
       }
     }
     printf("\tafter\n");
@@ -463,23 +463,23 @@ void gauss_resolution(float* mat, int size) {
     /* } */
     //printf("cabou\n");
     //printf("%f\n", x[size-1]);
-    printf("\t %f / %f\n", mat[size*size + size-1], mat[size*size + size-2]);
-    x[size-1] = mat[size*size + size-1] / mat[size*size + size-2];
-    printf("%f\n", x[size-1]);
-    for(i = size-2; i >= 0; i--) {
+    printf("\t %f / %f\n", mat[sizeRows*sizeRows + sizeRows-1], mat[sizeRows*sizeRows + sizeRows-2]);
+    x[sizeRows-1] = mat[sizeRows*sizeRows + sizeRows-1] / mat[sizeRows*sizeRows + sizeRows-2];
+    printf("%f\n", x[sizeRows-1]);
+    for(i = sizeRows-2; i >= 0; i--) {
       s = 0;
-      for(j = i+1; j < size; j++) {
+      for(j = i+1; j < sizeRows; j++) {
 	printf("\tantes: %f\n", s);
-	s = s + mat[i*(size+1) + j] * x[j];
+	s = s + mat[i*(sizeColumns) + j] * x[j];
 	printf("\tdepois: %f\n", s);
       }
       printf("\tantes X: %f\n", x[i]);
-      x[i] = (mat[i*(size+1) + size] - s) / mat[i*(size+1) + i];
+      x[i] = (mat[i*(sizeColumns) + sizeRows] - s) / mat[i*(sizeColumns) + i];
       printf("\tdepois X: %f\n", x[i]);
     }
   }
 
-  for(int rows = 0; rows < size; rows++) {
+  for(int rows = 0; rows < sizeRows; rows++) {
     
     printf("%f ", x[rows]);
     

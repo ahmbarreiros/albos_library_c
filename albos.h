@@ -97,4 +97,4 @@ extern long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns);
 
 extern float* gauss_elimination(float* mat, int sizeRows, int sizeColumns);
 
-extern void gauss_resolution(float* mat, int size);
+extern void gauss_resolution(float* mat, int sizeRows, int sizeColumns);

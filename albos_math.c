@@ -353,6 +353,19 @@ int compare_error(double error1, double error2) {
 
 /** VECTOR NORMS */
 
+//NOTE: give better description of following functions
+/**
+ * @brief Calculates the euclidean norm of a vector.
+ * 
+ * @param  (float*) values: Array of floats.
+ * @param  (int)    size  : Size of the array.
+ * @return (float)  The square root of the euclidean norm of a vector.
+ *
+ * @note This function does not calculate the final result of the function. Instead, it calculates the value of the square root of the norm.
+ * @warning This function is for one float vector only, for two, check reference. 
+ * @see euclidean_norm_i() for integers.
+ * @see eucliedan_norm_distance_f() for the distance of two vectors with euclidean norm.
+ */
 float euclidean_norm_f(float* values, int size) { 
   float sum = 0.0;
   for(int i = 0; i < size; i++) {
@@ -361,6 +374,8 @@ float euclidean_norm_f(float* values, int size) {
   return sum;
 }
 
+
+//TODO: remove this function, as it is redundant to euclidean_norm_f().
 long euclidean_norm_i(int* values, int size) {  
   long sum = 0;
   for(int i = 0; i < size; i++) {
@@ -369,6 +384,20 @@ long euclidean_norm_i(int* values, int size) {
   return sum;
 }
 
+
+/**
+ * @brief Calculates the distance between to vectos with euclidean norm.
+ * 
+ * @param  (float*) valuesVectorA: Vector A coordinates.
+ * @param  (int)    sizeVectorA  : Size of vector A.
+ * @param  (float*) valuesVectorB: Vector B coordinates.
+ * @param  (int)    sizeVectorB  : Size of vector B.
+ * @return (float)  The square root of the euclidean norm between two vectors.
+ *
+ * @note This function does not calculate the final result of the function. Instead, it calculates the value of the square root of the norm.
+ * @warning This function is for measuring the distance between two vectors. For one vector, check reference.
+ * @see eucliedan_norm_f() for one vector only.
+ */
 float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
 				float* valuesVectorB, int sizeVectorB) {
   float sum = 0.0;
@@ -386,6 +415,7 @@ float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
   return sum;
 }
 
+//TODO: delete this function as its redundant
 long euclidean_norm_distance_i(int* valuesVectorA, int sizeVectorA,
 			       int* valuesVectorB, int sizeVectorB) {
   long sum = 0;
@@ -629,6 +659,7 @@ float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {
   return mat;
 }
 
+/** LINEAR SYSTEM */
 void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
   int k = 0, i = 0, j = 0;
   float m = 0, s = 0;

@@ -13,6 +13,9 @@ parameters are camelCase
 
 #include <stdio.h>
 
+#define INF_FLOAT (1 << (sizeof(double))) + 1
+#define INF (1L <<(sizeof(int))) - 1
+#define DOUBLE_INF 1.0e8
 
 /* BASIC OPERATIONS */
 extern long abs_i(long x);
@@ -101,4 +104,4 @@ extern void gauss_resolution(float* mat, int sizeRows, int sizeColumns);
 
 extern double fint(float x);
 
-extern double simpson13_inf(float inferior_limit);
+extern double simpsons13(float inferior_limit, float superior_limit, unsigned long n);

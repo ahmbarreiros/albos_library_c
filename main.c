@@ -1,5 +1,6 @@
 #include "albos.h"
 #include <stdio.h>
+#include <math.h>
 
 int main() {
   
@@ -17,7 +18,10 @@ int main() {
 
   //float *res = gauss_elimination(*matrix, 3, 4);
   //gauss_resolution(*matrix, sizeRows, sizeColumns);
-  double result = simpson13_inf(10);
+  float inferior_limit = 0;
+  float superior_limit = 1;
+  unsigned long n = (superior_limit - inferior_limit) / 2;
+  double result = simpsons13(inferior_limit, superior_limit, 10);
   printf("result: %f\n", result);
  return 0;
 }

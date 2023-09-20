@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <float.h>
 #include "albos.h"
 
-#define INF_FLOAT (1 << (sizeof(float))) - 1
+#define INF_FLOAT (1 << (sizeof(double))) + 1
 #define INF (1L <<(sizeof(int))) - 1
-#define DOUBLE_INF INFINITY
+#define DOUBLE_INF 1.0e8
 
  // THIS IS A TEMPLATE FOR DOCUMENTING FUNCTIONS
 /**
@@ -717,46 +718,46 @@ void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
 
 double fint(float x) {
   // FUNCTION f(x) in Zf(x)dx. Change this as necessary
-  return ((float)1.0 / pow_f(x, 3));
+  //  ((float)1.0 / pow_f(x, 3))
+  return exp(x);
 }
 
-double simpson13_inf(float inferior_limit) {
-  double superior_limit = DOUBLE_INF;
-
-  long subintervals = 100000;
-  long n = 10000;
-  double m;
+double simpsons13(float inferior_limit, float superior_limit, unsigned long n) {
+  //printf("sl: %f\n", superior_limit);
+  
+  unsigned long m;;
   if(n % 2 != 0) {
     m = n - 1;
   } else {
     m = n;
   }
-  printf("\tn: %d\n", n);
-  printf("\tm: %f\n", m);
+  //printf("\tn: %d\n", n);
+  //printf("\tm: %f\n", m);
   double a = inferior_limit;
   double b = superior_limit;
   double xa = a;
   double xb = b;
   double ya = fint(xa);
   double yb = fint(xb);
-  printf("\ta: %f\n", a);
-  printf("\txa: %f\n", xa);
-  printf("\tb: %f\n", b);
-  printf("\txb: %f\n", xb);
-  printf("\tya: %f\n", ya);
-  printf("\tyb: %f\n", yb);
+  //printf("\ta: %f\n", a);
+  //printf("\txa: %f\n", xa);
+  //printf("\tb: %f\n", b);
+  //printf("\txb: %f\n", xb);
+  //printf("\tya: %f\n", ya);
+  //printf("\tyb: %f\n", yb);
   double dx = (xb - xa) / m;
+
   printf("\tdx: %f\n", dx);
-  double m1 = m - 1;
-  double m2 = m - 2;
-  printf("\tm1: %f\n", m1);
-  printf("\tm2: %f\n", m2);
+  unsigned long m1 = m - 1;
+  unsigned long m2 = m - 2;
+  //printf("\tm1: %f\n", m1);
+  //printf("\tm2: %f\n", m2);
 
   double y2 = 0, vy2 = 0, y4 = 0, vy4 = 0;
-  printf("\ty2: %f\n", y2);
-  printf("\tvy2: %f\n", vy2);
-  printf("\ty4: %f\n", y4);
-  printf("\tvy4: %f\n", vy4);
+  //printf("\ty2: %f\n", y2);
+  //printf("\tvy2: %f\n", vy2);
+  //printf("\ty4: %f\n", y4);
+  //printf("\tvy4: %f\n", vy4);
   for(int j = 1; j <= m1; j++) {
     double xj = xa + j*dx;
     if(j % 2 != 0) {
@@ -767,16 +768,16 @@ double simpson13_inf(float inferior_limit) {
       y2 = y2 + vy2;
     }
   }
-  printf("\t\ty2: %f\n", y2);
-  printf("\t\tvy2: %f\n", vy2);
-  printf("\t\ty4: %f\n", y4);
-  printf("\t\tvy4: %f\n\n", vy4);
+  //printf("\t\ty2: %f\n", y2);
+  //printf("\t\tvy2: %f\n", vy2);
+  //printf("\t\ty4: %f\n", y4);
+  //printf("\t\tvy4: %f\n\n", vy4);
   y4 = 4*y4;
   y2 = 2*y2;
-  printf("\t\ty2: %f\n", y2);
-  printf("\t\tvy2: %f\n", vy2);
-  printf("\t\ty4: %f\n", y4);
-  printf("\t\tvy4: %f\n\n", vy4);
+  //printf("\t\ty2: %f\n", y2);
+  //printf("\t\tvy2: %f\n", vy2);
+  //printf("\t\ty4: %f\n", y4);
+  //printf("\t\tvy4: %f\n\n", vy4);
   double result = (ya + yb + y2 + y4)*dx*(1.0/3);
   return result;
 }

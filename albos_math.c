@@ -716,6 +716,7 @@ void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
 /** INTEGRATION */
 
 double fint(float x) {
+  // FUNCTION f(x) in Zf(x)dx. Change this as necessary
   return ((float)1.0 / pow_f(x, 3));
 }
 

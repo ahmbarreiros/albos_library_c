@@ -4,7 +4,6 @@
 #include <float.h>
 #include "albos.h"
 
-#define INF_FLOAT (1 << (sizeof(double))) + 1
 #define INF (1L <<(sizeof(int))) - 1
 #define DOUBLE_INF 1.0e8
 

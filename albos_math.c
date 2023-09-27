@@ -417,23 +417,6 @@ float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
   return sum;
 }
 
-//TODO: delete this function as its redundant
-long euclidean_norm_distance_i(int* valuesVectorA, int sizeVectorA,
-			       int* valuesVectorB, int sizeVectorB) {
-  long sum = 0;
-  int biggest = max_i(sizeVectorA, sizeVectorB);
-  int smallest = min_i(sizeVectorA, sizeVectorB);
-  for(int i = 0; i < biggest; i++) {
-    if(i <= smallest) {
-      sum += pow_i((valuesVectorA[i] - valuesVectorB[i]), 2);
-    } else if(smallest == sizeVectorA) {
-      sum += pow_i(valuesVectorA[i], 2);
-    } else if(smallest == sizeVectorB){
-      sum += pow_i(valuesVectorB[i], 2);
-    }
-  }
-  return sum;
-}
 
 float maximum_norm_f(float* values, int size) { 
   float max = -INF_FLOAT;
@@ -480,30 +463,6 @@ float maximum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
   else return -1.0;
 }
 
-
-int maximum_norm_distance_i(int* valuesVectorA, int sizeVectorA,
-			      int* valuesVectorB, int sizeVectorB) {
-  int max = -INF;
-  int biggest = max_i(sizeVectorA, sizeVectorB);
-  int smallest = min_i(sizeVectorA, sizeVectorB);
-  int currentValue = 0;
-  for(int i = 0; i < biggest; i++) {
-    currentValue = 0.0;
-    if(i <= smallest) {
-      currentValue = abs_f(valuesVectorA[i] - valuesVectorB[i]);
-    } else if(smallest == sizeVectorA) {
-	currentValue = abs_f(valuesVectorA[i]);
-    } else if(smallest == sizeVectorB){
-	currentValue = abs_f(valuesVectorB[i]);
-    }
-    if(currentValue > max) {
-      max = currentValue;
-    }
-  }
-  if(max != -INF) return max;
-  else return -1;
-}
-
 float sum_norm_f(float* values, int size) {  
   float sum = 0.0;
   for(int i = 0; i < size; i++) {
@@ -524,24 +483,6 @@ long sum_norm_i(int* values, int size) {
 float sum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
 			  float* valuesVectorB, int sizeVectorB) {  
   float sum = 0.0;
-  int biggest = max_i(sizeVectorA, sizeVectorB);
-  int smallest = min_i(sizeVectorA, sizeVectorB);
-  for(int i = 0; i < biggest; i++) {
-    if(i <= smallest) {
-      sum += abs_f(valuesVectorA[i] - valuesVectorB[i]);
-    } else if(smallest == sizeVectorA) {
-      sum += abs_f(valuesVectorA[i]);
-    } else if(smallest == sizeVectorB) {
-      sum += abs_f(valuesVectorB[i]);
-    }
-  }
-  return sum;
-}
-
-
-int sum_norm_distance_i(int* valuesVectorA, int sizeVectorA,
-			int* valuesVectorB, int sizeVectorB) {  
-  int sum = 0.0;
   int biggest = max_i(sizeVectorA, sizeVectorB);
   int smallest = min_i(sizeVectorA, sizeVectorB);
   for(int i = 0; i < biggest; i++) {

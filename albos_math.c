@@ -714,10 +714,6 @@ double simpsons13(float inferior_limit, float superior_limit, unsigned long n) {
   //printf("\t\tvy4: %f\n\n", vy4);
   y4 = 4*y4;
   y2 = 2*y2;
-  //printf("\t\ty2: %f\n", y2);
-  //printf("\t\tvy2: %f\n", vy2);
-  //printf("\t\ty4: %f\n", y4);
-  //printf("\t\tvy4: %f\n\n", vy4);
   double result = (ya + yb + y2 + y4)*dx*(1.0/3);
   return result;
 }

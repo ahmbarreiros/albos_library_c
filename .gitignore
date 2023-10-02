@@ -1,1 +1,2 @@
-albos.exe
+*.exe
+build/

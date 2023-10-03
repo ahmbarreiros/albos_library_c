@@ -663,41 +663,22 @@ double fint(float x) {
 }
 
 double simpsons13(float inferior_limit, float superior_limit, unsigned long n) {
-  //printf("sl: %f\n", superior_limit);
-  
   unsigned long m;;
   if(n % 2 != 0) {
     m = n - 1;
   } else {
     m = n;
   }
-  //printf("\tn: %d\n", n);
-  //printf("\tm: %f\n", m);
   double a = inferior_limit;
   double b = superior_limit;
   double xa = a;
   double xb = b;
   double ya = fint(xa);
   double yb = fint(xb);
-  //printf("\ta: %f\n", a);
-  //printf("\txa: %f\n", xa);
-  //printf("\tb: %f\n", b);
-  //printf("\txb: %f\n", xb);
-  //printf("\tya: %f\n", ya);
-  //printf("\tyb: %f\n", yb);
   double dx = (xb - xa) / m;
-
-  printf("\tdx: %f\n", dx);
   unsigned long m1 = m - 1;
   unsigned long m2 = m - 2;
-  //printf("\tm1: %f\n", m1);
-  //printf("\tm2: %f\n", m2);
-
   double y2 = 0, vy2 = 0, y4 = 0, vy4 = 0;
-  //printf("\ty2: %f\n", y2);
-  //printf("\tvy2: %f\n", vy2);
-  //printf("\ty4: %f\n", y4);
-  //printf("\tvy4: %f\n", vy4);
   for(int j = 1; j <= m1; j++) {
     double xj = xa + j*dx;
     if(j % 2 != 0) {

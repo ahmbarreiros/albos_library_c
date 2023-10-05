@@ -36,9 +36,9 @@
  * @return (long) Integer "x" that represents the absolute value of parameter "x".
  *
  * @warning This function is for integer values only; for floats, check reference.
- * @see abs_f() for floating point values.
+ * @see Abs_f() for floating point values.
  */
-long abs_i(long x) {
+long Abs_i(long x) {
   
   if(x >= 0) return x;
   else return -x; 
@@ -55,9 +55,9 @@ long abs_i(long x) {
  * @return (double) Double value "x" that represents the absolute value of parameter "x".
  *
  * @warning This function is for floating values only; for integers, check reference.
- * @see abs_i() for integer values.
+ * @see Abs_i() for integer values.
  */
-double abs_f(double x) {
+double Abs_f(double x) {
   if(x >= 0) return x;
   else return -x;
 }
@@ -71,9 +71,9 @@ double abs_f(double x) {
  * @return (int) Compares parameters "x" and "y", and returns the biggest value between them.
  *
  * @warning This function is for integer values only; for floats, check reference.
- * @see min_i() for smallest comparison.
+ * @see Min_i() for smallest comparison.
  */
-int max_i(int x, int y) {
+int Max_i(int x, int y) {
   if(x > y) return x;
   else return y;
 }
@@ -87,9 +87,9 @@ int max_i(int x, int y) {
  * @return (int) Compares parameters "x" and "y", and returns the smallest value between them.
  *
  * @warning This function is for integer values only; for floats, check reference.
- * @see max_i() for biggest comparison.
+ * @see Max_i() for biggest comparison.
  */
-int min_i(int x, int y) {
+int Min_i(int x, int y) {
   if(x <= y) return x;
   else return y;
 }
@@ -100,18 +100,18 @@ int min_i(int x, int y) {
  *
  * Given an array of floating point values, calculates the biggest value within it.
  *
- * @param  (float*) arr : Array of floating point values.
- * @param  (int)    size: Size of the array.
+ * @param  (float*) Arr : Array of floating point values.
+ * @param  (int)    Size: Size of the array.
  * @return (float)  The biggest value of the array "arr".
  *
  * @warning This function is for floating point values only; for integers, check reference.
- * @see max_arr_i() for integer values.
+ * @see MaxArr_i() for integer values.
  */
-float max_arr_f(float* arr, int size) { 
+float MaxArr_f(float* Arr, int Size) { 
   float max = -INF_FLOAT;
-  for(int i = 0; i < size; i++) {
-    if(arr[i] > max) {
-      max = arr[i];
+  for(int i = 0; i < Size; i++) {
+    if(Arr[i] > max) {
+      max = Arr[i];
     }
   }
   return max;
@@ -123,18 +123,18 @@ float max_arr_f(float* arr, int size) {
  *
  * Given an array of integer values, calculates the biggest value within it.
  *
- * @param  (int*) arr :  Array of integer values.
- * @param  (int)  size:  Size of the array.
+ * @param  (int*) Arr :  Array of integer values.
+ * @param  (int)  Size:  Size of the array.
  * @return (int)  The biggest value of the array "arr".
  *
  * @warning This function is for floating point values only; for integers, check reference.
- * @see max_arr_i() for integer values.
+ * @see MaxArr_i() for integer values.
  */
-int max_arr_i(int* values, int size) {  
+int MaxArr_i(int* Arr, int Size) {  
   int max = -INF;
-  for(int i = 0; i < size; i++) {
-    if(values[i] > max) {
-      max = values[i];
+  for(int i = 0; i < Size; i++) {
+    if(Arr[i] > max) {
+      max = Arr[i];
     }
   }
   return max;
@@ -147,31 +147,31 @@ int max_arr_i(int* values, int size) {
  * Given a number (base), calculates the multiplication of this number n (exponent) times.
  * For example, 8 to the power 2 is equal to 8 * 8 = 64.
  *
- * @param  (int)  base    : Base number of the equation.
- * @param  (int)  exponent: Exponent number of the equation.
+ * @param  (int)  Base    : Base number of the equation.
+ * @param  (int)  Exponent: Exponent number of the equation.
  * @return (long) The solution of the base to the power of the exponent.
  *
  * @note    This function does not accepts floating point exponents because it would involve nth root computation.
  * @warning This function is for integer bases; for floating point bases, check reference.
- * @see pow_f() for floating point bases.
+ * @see Pow_f() for floating point bases.
  */
-long pow_i(int base, int exponent) { 
+long Pow_i(int Base, int Exponent) { 
   int isNegative = 0;
-  long raised = 1;
-  if(exponent == 0) return 1;
-  if(exponent < 0) {
+  long Raised = 1;
+  if(Exponent == 0) return 1;
+  if(Exponent < 0) {
    isNegative = 1;
-   exponent = abs_i(exponent);
+   Exponent = Abs_i(Exponent);
   }
-  if(exponent == 1) return base;
-  else if(exponent == 2) return (base*base);
-  for(int i = 0; i < exponent; i++) {
-    raised *= base;
+  if(Exponent == 1) return Base;
+  else if(Exponent == 2) return (Base*Base);
+  for(int i = 0; i < Exponent; i++) {
+    Raised *= Base;
   }
   if(isNegative) {
-    return (1 / raised);
+    return (1 / Raised);
   } else {
-    return raised;
+    return Raised;
   }
 }
 
@@ -182,31 +182,31 @@ long pow_i(int base, int exponent) {
  * Given a number (base), calculates the multiplication of this number n (exponent) times.
  * For example, 8.0 to the power 2 is equal to 8.0 * 8.0 = 64.0.
  *
- * @param  (float)  base    : Base number of the equation.
- * @param  (int)    exponent: Exponent number of the equation.
+ * @param  (float)  Base    : Base number of the equation.
+ * @param  (int)    Exponent: Exponent number of the equation.
  * @return (double) The solution of the base to the power of the exponent.
  *
  * @note    This function does not accepts floating point exponents because it would involve nth root computation.
  * @warning This function is for floating point bases; for integer bases, check reference.
- * @see pow_i() for integer bases.
+ * @see Pow_i() for integer bases.
  */
-double pow_f(float base, int exponent) {  
+double Pow_f(float Base, int Exponent) {  
   int isNegative = 0;
-  double raised = 1;
-  if(exponent == 0) return 1;
-  if(exponent < 0) {
+  double Raised = 1;
+  if(Exponent == 0) return 1;
+  if(Exponent < 0) {
    isNegative = 1;
-   exponent = abs_i(exponent);
+   Exponent = Abs_i(Exponent);
   }
-  if(exponent == 1) return base;
-  else if(exponent == 2) return (base*base);
-  for(int i = 0; i < exponent; i++) {
-    raised *= base;
+  if(Exponent == 1) return Base;
+  else if(Exponent == 2) return (Base*Base);
+  for(int i = 0; i < Exponent; i++) {
+    Raised *= Base;
   }
   if(isNegative) {
-    return (1 / raised);
+    return (1 / Raised);
   } else {
-    return raised;
+    return Raised;
   }
 }
 
@@ -216,40 +216,40 @@ double pow_f(float base, int exponent) {
  *
  * Given an array of integer values, calculates the sum of all elements.
  *
- * @param  (int*) arr : Array of integers.
- * @param  (int)  size: Size of the array.
+ * @param  (int*) Arr : Array of integers.
+ * @param  (int)  Size: Size of the array.
  * @return (long) The sum of elements of the array "arr".
  *
  * @warning This function is for arrays of integer values; for arrays of floating point values, check reference
- * @see sum_f() for arrays of floating point values.
+ * @see Sum_f() for arrays of floating point values.
  */
-long sum_i(int* arr, int size) {  
-  long sum = 0;
-  for(int i = 0; i < size; i++) {
-    sum += arr[i];
+long Sum_i(int* Arr, int Size) {  
+  long Sum = 0;
+  for(int i = 0; i < Size; i++) {
+    Sum += Arr[i];
   }
-  return sum;
+  return Sum;
 }
 
 
 /**
  * @brief Calculates the sum of the elements of an array.
  *
- * Given an array of floating point values, calculates the sum of all elements.
+ * Given an Array of floating point values, calculates the sum of all elements.
  *
- * @param  (int*) arr : Array of floats.
- * @param  (int)  size: Size of the array.
- * @return (long) The sum of elements of the array "arr".
+ * @param  (int*) Arr : Array of floats.
+ * @param  (int)  Size: Size of the Array.
+ * @return (long) The sum of elements of the Array "Arr".
  *
- * @warning This function is for arrays of float values; for arrays of integers, check reference
- * @see sum_i() for arrays of integer values.
+ * @warning This function is for Arrays of float values; for Arrays of integers, check reference
+ * @see Sum_i() for Arrays of integer values.
  */
-double sum_f(float* arr, int size) {  
-  double sum = 0.0;
-  for(int i = 0; i < size; i++) {
-    sum += arr[i];
+double Sum_f(float* Arr, int Size) {  
+  double Sum = 0.0;
+  for(int i = 0; i < Size; i++) {
+    Sum += Arr[i];
   }
-  return sum;
+  return Sum;
 }
 
 
@@ -265,16 +265,16 @@ double sum_f(float* arr, int size) {
  * Used for error measurement, given the real value and approximate value, computates
  * the absolute error.
  *
- * @param  (float) value           : Real value of a measurement.
- * @param  (float) approximateValue: Approximate value of a measurement.
+ * @param  (float) Value           : Real value of a measurement.
+ * @param  (float) ApproximateValue: Approximate value of a measurement.
  * @return (float) The absolute error of the approximate value.
  *
- * @see relative_error()    for relative error measurement.
- * @see relative_error_ea() for calculating relative error using an absolute error.
- *  @see compare_error()    for comparing two errors.
+ * @see RelativeError()    for relative error measurement.
+ * @see RelativeErrorEA() for calculating relative error using an absolute error.
+ * @see CompareError()    for comparing two errors.
  */
-float absolute_error(float value, float approximateValue) {
-  return abs_f(value - approximateValue);
+float AbsoluteError(float Value, float ApproximateValue) {
+  return Abs_f(Value - ApproximateValue);
 }
 
 
@@ -287,19 +287,19 @@ float absolute_error(float value, float approximateValue) {
  * error, where absolute error does not takes in consideration the order of magnitude
  * of the value being calculated.
  *
- * @param  (float) value           : Real value of a measurement.
- * @param  (float) approximateValue: Approximate value of a measurement.
+ * @param  (float) Value           : Real value of a measurement.
+ * @param  (float) ApproximateValue: Approximate value of a measurement.
  * @return (float) The relative error of the approximate value.
  *
- * @see absolute_error()    for absolute error measurement.
- * @see relative_error_ea() for calculating the relative error using an absolute error.
- * @see compare_error()     for comparing two errors.
+ * @see AbsoluteError()    for absolute error measurement.
+ * @see RelativeErrorEA() for calculating the relative error using an absolute error.
+ * @see CompareError()     for comparing two errors.
  */
-double relative_error(float value, float approximateValue) {
-  if(value) {
-    return (absolute_error(value, approximateValue) / value);
+double RelativeError(float Value, float ApproximateValue) {
+  if(Value) {
+    return (AbsoluteError(Value, ApproximateValue) / Value);
   } else {
-    printf("Invalid argument. (%f)\n", value);
+    printf("Invalid argument. (%f)\n", Value);
     return -1.0;
   }
 }
@@ -315,19 +315,19 @@ double relative_error(float value, float approximateValue) {
  * error, where absolute error does not takes in consideration the order of magnitude
  * of the value being calculated.
  *
- * @param  (float) value           : Real value of a measurement.
- * @param  (float) absoluteError: Absolute error of a measurement.
+ * @param  (float) Value           : Real value of a measurement.
+ * @param  (float) AbsoluteError: Absolute error of a measurement.
  * @return (float) The relative error of the measurement.
  *
- * @see absolute_error() for absolute error measurement.
- * @see relative_error() for calculating the relative error using an approximate value.
- * @see compare_error()  for comparing two errors.
+ * @see AbsoluteError() for absolute error measurement.
+ * @see RelativeError() for calculating the relative error using an approximate value.
+ * @see CompareError()  for comparing two errors.
  */
-double relative_error_ea(float value, float absoluteError) {
-  if(value) {
-    return (absoluteError / value);
+double RelativeErrorEA(float Value, float AbsoluteError) {
+  if(Value) {
+    return (AbsoluteError / Value);
   } else {
-    printf("Invalid argument. (%f)\n", value);
+    printf("Invalid argument. (%f)\n", Value);
     return -1.0;
   }
 }
@@ -336,17 +336,17 @@ double relative_error_ea(float value, float absoluteError) {
 /**
  * @brief Compare two error measurements of the same kind.
  *
- * @param  (float) error1: The first error measurement..
- * @param  (float) error2: The second error measurement.
+ * @param  (float) Error1: The first error measurement..
+ * @param  (float) Error2: The second error measurement.
  * @return (int)   The number representing the error. 1 represents the parameter error1, 2 represents the parameter error2.
  *
  * @warning beware of which kind of error measurements are being compared, if an absolute error is being compared with an relative error, issues may appear.
- * @see absolute_error()    for absolute error measurement.
- * @see relative_error()    for calculating the relative error using an approximate value.
- * @see absolute_error_ea() for calculating the relative error using an absolute error.
+ * @see AbsoluteError()    for absolute error measurement.
+ * @see RelativeError()    for calculating the relative error using an approximate value.
+ * @see AbsoluteErrorEA() for calculating the relative error using an absolute error.
  */
-int compare_error(double error1, double error2) {
-  return (error1 < error2 ? 1 : 2);
+int CompareError(double Error1, double Error2) {
+  return (Error1 < Error2 ? 1 : 2);
 }
 
 
@@ -359,224 +359,152 @@ int compare_error(double error1, double error2) {
 /**
  * @brief Calculates the euclidean norm of a vector.
  * 
- * @param  (float*) values: Array of floats.
- * @param  (int)    size  : Size of the array.
+ * @param  (float*) Values: Array of floats.
+ * @param  (int)    Size  : Size of the array.
  * @return (float)  The square root of the euclidean norm of a vector.
  *
  * @note This function does not calculate the final result of the function. Instead, it calculates the value of the square root of the norm.
  * @warning This function is for one float vector only, for two, check reference. 
- * @see euclidean_norm_i() for integers.
- * @see eucliedan_norm_distance_f() for the distance of two vectors with euclidean norm.
+ * @see EucliedanNormDistance() for the distance of two vectors with euclidean norm.
  */
-float euclidean_norm_f(float* values, int size) { 
-  float sum = 0.0;
-  for(int i = 0; i < size; i++) {
-    sum += pow_f(values[i], 2);
+float EuclideanNorm(float* Values, int Size) { 
+  float Sum = 0.0;
+  for(int i = 0; i < Size; i++) {
+    Sum += Pow_f(Values[i], 2);
   }
-  return sum;
+  return Sum;
 }
-
-
-//TODO: remove this function, as it is redundant to euclidean_norm_f().
-long euclidean_norm_i(int* values, int size) {  
-  long sum = 0;
-  for(int i = 0; i < size; i++) {
-    sum += pow_i(values[i], 2);
-  }
-  return sum;
-}
-
 
 /**
  * @brief Calculates the distance between to vectos with euclidean norm.
  * 
- * @param  (float*) valuesVectorA: Vector A coordinates.
- * @param  (int)    sizeVectorA  : Size of vector A.
- * @param  (float*) valuesVectorB: Vector B coordinates.
- * @param  (int)    sizeVectorB  : Size of vector B.
+ * @param  (float*) ValuesVectorA: Vector A coordinates.
+ * @param  (int)    SizeVectorA  : Size of vector A.
+ * @param  (float*) ValuesVectorB: Vector B coordinates.
+ * @param  (int)    SizeVectorB  : Size of vector B.
  * @return (float)  The square root of the euclidean norm between two vectors.
  *
  * @note This function does not calculate the final result of the function. Instead, it calculates the value of the square root of the norm.
  * @warning This function is for measuring the distance between two vectors. For one vector, check reference.
- * @see eucliedan_norm_f() for one vector only.
+ * @see EucliedanNorm() for one vector only.
  */
-float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
-				float* valuesVectorB, int sizeVectorB) {
-  float sum = 0.0;
-  int biggest = max_i(sizeVectorA, sizeVectorB);
-  int smallest = min_i(sizeVectorA, sizeVectorB);
-  for(int i = 0; i < biggest; i++) {
-    if(i <= smallest) {
-      sum += pow_f((valuesVectorA[i] - valuesVectorB[i]), 2);
-    } else if(smallest == sizeVectorA) {
-      sum += pow_f(valuesVectorA[i], 2);
-    } else if(smallest == sizeVectorB){
-      sum += pow_f(valuesVectorB[i], 2);
+float EuclideanNormDistance(float* ValuesVectorA, int SizeVectorA,
+			    float* ValuesVectorB, int SizeVectorB) {
+  float Sum = 0.0;
+  int Biggest = Max_i(SizeVectorA, SizeVectorB);
+  int Smallest = Min_i(SizeVectorA, SizeVectorB);
+  for(int i = 0; i < Biggest; i++) {
+    if(i <= Smallest) {
+      Sum += Pow_f((ValuesVectorA[i] - ValuesVectorB[i]), 2);
+    } else if(Smallest == SizeVectorA) {
+      Sum += Pow_f(ValuesVectorA[i], 2);
+    } else if(Smallest == SizeVectorB){
+      Sum += Pow_f(ValuesVectorB[i], 2);
     }
   }
-  return sum;
+  return Sum;
 }
 
 
-float maximum_norm_f(float* values, int size) { 
-  float max = -INF_FLOAT;
-  for(int i = 0; i < size; i++) {
-    if(max < abs_f(values[i])) {
-      max = abs_f(values[i]);
+float MaximumNorm(float* Values, int Size) { 
+  float Max = -INF_FLOAT;
+  for(int i = 0; i < Size; i++) {
+    if(Max < Abs_f(Values[i])) {
+      Max = Abs_f(Values[i]);
     }
   }
-  if(max != -INF_FLOAT) return max;
+  if(Max != -INF_FLOAT) return Max;
   else return -1.0;
 }
 
-int maximum_norm_i(int* values, int size) {
-  int max = -INF;
-  for(int i = 0; i < size; i++) {
-    if(max < abs_i(values[i])) {
-      max = abs_i(values[i]);
+float MaximumNormDistance(float* ValuesVectorA, int SizeVectorA,
+			  float* ValuesVectorB, int SizeVectorB) {
+  float Max = -INF_FLOAT;
+  int Biggest = Max_i(SizeVectorA, SizeVectorB);
+  int Smallest = Min_i(SizeVectorA, SizeVectorB);
+  float CurrentValue = 0.0;
+  for(int i = 0; i < Biggest; i++) {
+    CurrentValue = 0.0;
+    if(i <= Smallest) {
+      CurrentValue = Abs_f(ValuesVectorA[i] - ValuesVectorB[i]);
+    } else if(Smallest == SizeVectorA) {
+	CurrentValue = Abs_f(ValuesVectorA[i]);
+    } else if(Smallest == SizeVectorB){
+	CurrentValue = Abs_f(ValuesVectorB[i]);
+    }
+    if(CurrentValue > Max) {
+      Max = CurrentValue;
     }
   }
-  if(max != -INF) return max;
-  else return -1;
-}
-
-float maximum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
-			      float* valuesVectorB, int sizeVectorB) {
-  float max = -INF_FLOAT;
-  int biggest = max_i(sizeVectorA, sizeVectorB);
-  int smallest = min_i(sizeVectorA, sizeVectorB);
-  float currentValue = 0.0;
-  for(int i = 0; i < biggest; i++) {
-    currentValue = 0.0;
-    if(i <= smallest) {
-      currentValue = abs_f(valuesVectorA[i] - valuesVectorB[i]);
-    } else if(smallest == sizeVectorA) {
-	currentValue = abs_f(valuesVectorA[i]);
-    } else if(smallest == sizeVectorB){
-	currentValue = abs_f(valuesVectorB[i]);
-    }
-    if(currentValue > max) {
-      max = currentValue;
-    }
-  }
-  if(max != -INF_FLOAT) return max;
+  if(Max != -INF_FLOAT) return Max;
   else return -1.0;
 }
 
-float sum_norm_f(float* values, int size) {  
-  float sum = 0.0;
-  for(int i = 0; i < size; i++) {
-    sum += abs_f(values[i]);
+float SumNorm(float* Values, int Size) {  
+  float Sum = 0.0;
+  for(int i = 0; i < Size; i++) {
+    Sum += Abs_f(Values[i]);
   }
-  return sum;
+  return Sum;
 }
 
-long sum_norm_i(int* values, int size) { 
-  long sum = 0;
-  for(int i = 0; i < size; i++) {
-    sum += abs_i(values[i]);
-  }
-  return sum;
-}
-
-
-float sum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
-			  float* valuesVectorB, int sizeVectorB) {  
-  float sum = 0.0;
-  int biggest = max_i(sizeVectorA, sizeVectorB);
-  int smallest = min_i(sizeVectorA, sizeVectorB);
-  for(int i = 0; i < biggest; i++) {
-    if(i <= smallest) {
-      sum += abs_f(valuesVectorA[i] - valuesVectorB[i]);
-    } else if(smallest == sizeVectorA) {
-      sum += abs_f(valuesVectorA[i]);
-    } else if(smallest == sizeVectorB) {
-      sum += abs_f(valuesVectorB[i]);
+float SumNormDistance(float* ValuesVectorA, int SizeVectorA,
+		      float* ValuesVectorB, int SizeVectorB) {  
+  float Sum = 0.0;
+  int Biggest = Max_i(SizeVectorA, SizeVectorB);
+  int Smallest = Min_i(SizeVectorA, SizeVectorB);
+  for(int i = 0; i < Biggest; i++) {
+    if(i <= Smallest) {
+      Sum += Abs_f(ValuesVectorA[i] - ValuesVectorB[i]);
+    } else if(Smallest == SizeVectorA) {
+      Sum += Abs_f(ValuesVectorA[i]);
+    } else if(Smallest == SizeVectorB) {
+      Sum += Abs_f(ValuesVectorB[i]);
     }
   }
-  return sum;
+  return Sum;
 }
 
 /* MATRICES NORMS */
 
-float frobenius_norm_f(float* values, int sizeRows, int sizeColumns) {
-  float sum = 0.0;
-  for(int i = 0; i < sizeRows; i++) {
-    for(int j = 0; j < sizeColumns; j++) {
-      sum += pow_f(values[i*sizeColumns + j], 2);
+float FrobeniusNorm(float* Values, int SizeRows, int SizeColumns) {
+  float Sum = 0.0;
+  for(int i = 0; i < SizeRows; i++) {
+    for(int j = 0; j < SizeColumns; j++) {
+      Sum += Pow_f(Values[i*SizeColumns + j], 2);
     }
   }
-  return sum;
+  return Sum;
 }
 
-long frobenius_norm_i(int* values, int sizeRows, int sizeColumns) {
-  long sum = 0;
-  for(int i = 0; i < sizeRows; i++) {
-    for(int j = 0; j < sizeColumns; j++) {
-      sum += pow_i(values[i*sizeColumns + j], 2);
+float RowMaximumNorm(float** Values, int SizeRows, int SizeColumns) {
+  float Sum = 0.0;
+  float MaxSum = -INF_FLOAT;
+  for(int i = 0; i < SizeRows; i++) {
+    Sum = 0.0;
+    for(int j = 0; j < SizeColumns; j++) {
+      Sum += Abs_f(Values[i][j]);
+    }
+    if(MaxSum < Sum) {
+      MaxSum = Sum;
     }
   }
-  return sum;
+  return MaxSum;
 }
 
-float row_maximum_norm_f(float** values, int sizeRows, int sizeColumns) {
-  float sum = 0.0;
-  float maxSum = -INF_FLOAT;
-  for(int i = 0; i < sizeRows; i++) {
-    sum = 0.0;
-    for(int j = 0; j < sizeColumns; j++) {
-      sum += abs_f(values[i][j]);
+float ColumnMaximumNorm(float* Values[], int SizeRows, int SizeColumns) {
+  float Sum = 0.0;
+  float MaxSum = -INF_FLOAT;
+  for(int j = 0; j < SizeColumns ; j++) {
+    Sum = 0.0;
+    for(int i = 0; i < SizeRows; i++) {
+      Sum += Abs_f(Values[i][j]);
     }
-    if(maxSum < sum) {
-      maxSum = sum;
-    }
-  }
-  return maxSum;
-}
-
-long row_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
-  long sum = 0;
-  long maxSum = -INF;
-  for(int i = 0; i < sizeRows; i++) {
-    sum = 0;
-    for(int j = 0; j < sizeColumns; j++) {
-      sum += abs_i(values[i][j]);
-    }
-    if(maxSum < sum) {
-      maxSum = sum;
+    if(MaxSum < Sum) {
+      MaxSum = Sum;
     }
   }
-  return maxSum;
-}
-
-float column_maximum_norm_f(float* values[], int sizeRows, int sizeColumns) {
-  float sum = 0.0;
-  float maxSum = -INF_FLOAT;
-  for(int j = 0; j < sizeColumns ; j++) {
-    sum = 0.0;
-    for(int i = 0; i < sizeRows; i++) {
-      sum += abs_f(values[i][j]);
-    }
-    if(maxSum < sum) {
-      maxSum = sum;
-    }
-  }
-  return maxSum;
-}
-
-long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns) {
-  long sum = 0;
-  long maxSum = -INF;
-  for(int j = 0; j < sizeColumns; j++) {
-    sum = 0;
-    for(int i = 0; i < sizeRows; i++) {
-      sum += abs_i(values[i][j]);
-    }
-    if(maxSum < sum) {
-      maxSum = sum;
-    }
-  }
-  return maxSum;
+  return MaxSum;
 }
 
 float* gauss_elimination(float* mat, int sizeRows, int sizeColumns) {

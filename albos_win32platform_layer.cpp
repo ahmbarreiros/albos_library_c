@@ -1,5 +1,8 @@
+#include "albos_platform.cpp"
+
 // NOTE: Bibliotecas incluídas - Futuramente o objetivo é remover a maior parte dessas
 #include <windows.h>
+#include <stdlib.h>
 #include <stdint.h>
 #include <xinput.h>
 #include <dsound.h>
@@ -9,9 +12,6 @@
 #define  global_variable static // Váriaveis inicializadas com 0
 #define  internal static // Funções internas para o arquivo
 #define  local_variable static // Inicializada apenas na primeira vez tipada
-
-// NOTE: Constantes
-#define PI32 3.14159265359f
 
 // NOTE: Tipos padronizados
 typedef int8_t  int8;
@@ -27,6 +27,9 @@ typedef uint64_t uint64;
 
 typedef float real32;
 typedef double real64;
+
+// NOTE: Constantes
+#define PI32 3.14159265359f
 
 // NOTE: Suporte para funções do xInput XInputGetState e XInputSetState
 #define X_INPUT_GET_STATE(name) DWORD WINAPI name(DWORD dwUserIndex, XINPUT_STATE* pState)
@@ -373,129 +376,179 @@ internal void Win32FillSoundBuffer(win32_sound_output* SoundOutput,
   }
 }
 
+struct platform_window {
+  HWND Handle;
+};
+typedef struct platform_window platform_window;
+
+platform_window* PlatformOpenWindow(HINSTANCE Instance,
+				    char* Title,
+				    int Width,
+				    int Height) {
+  platform_window *Result = (platform_window*)malloc(sizeof(platform_window));
+  WNDCLASSA WindowClass = {};
+  Win32ResizeDIBSection(&GlobalBackbuffer,
+			Width,
+			Height);
+  
+  WindowClass.style = CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
+  WindowClass.lpfnWndProc = Win32Wndproc;
+  WindowClass.hInstance = Instance;
+  WindowClass.lpszClassName = "WindowClass";
+  
+  if(RegisterClassA(&WindowClass)) {
+    Result->Handle = CreateWindowExA(
+				    0,
+				    WindowClass.lpszClassName,
+				    Title,
+				    WS_OVERLAPPEDWINDOW|WS_VISIBLE,
+				    CW_USEDEFAULT,
+				    CW_USEDEFAULT,
+				    CW_USEDEFAULT,
+				    CW_USEDEFAULT,
+				    0,
+				    0,
+				    Instance,
+				    0
+				    );
+    
+  }
+  return Result;
+}
+
+void PlatformCloseWindow(platform_window *Window) {
+  if(Window) {
+    DestroyWindow(Window->Handle);
+    free(Window);
+  }
+}
+
+typedef struct platform_sound_device {
+  win32_sound_output Handle;
+} platform_sound_device;
+
+platform_sound_device* PlatformOpenSoundDevice(int Volume, platform_window *Window) {
+  platform_sound_device *Result = (platform_sound_device*)malloc(sizeof(platform_sound_device));
+  win32_sound_output SoundOutput = {};
+  SoundOutput.SamplesPerSecond = 40000;
+  SoundOutput.ToneHz = Volume;
+  SoundOutput.ToneVolume = 200;
+  SoundOutput.RunningSampleIndex = 0;
+  SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz;
+  SoundOutput.BytesPerSample = sizeof(int16) * 2;
+  SoundOutput.SecondaryBufferSize = SoundOutput.SamplesPerSecond * SoundOutput.BytesPerSample;
+  SoundOutput.LatencySampleCount = SoundOutput.SamplesPerSecond / 15;
+  Result->Handle = SoundOutput;
+  Win32InitDSound(Window->Handle, Result->Handle.SamplesPerSecond, Result->Handle.SecondaryBufferSize);
+  Win32FillSoundBuffer(&Result->Handle, 0, Result->Handle.SecondaryBufferSize);
+
+  GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
+  return Result;
+}
+
+void PlatformPlaySoundDevice(win32_sound_output SoundOutput) {
+  DWORD PlayCursor;
+  DWORD WriteCursor;
+  if(SUCCEEDED(GlobalSecondaryBuffer->GetCurrentPosition(&PlayCursor,
+							 &WriteCursor))) {
+    DWORD ByteToLock = (SoundOutput.RunningSampleIndex * SoundOutput.BytesPerSample) % SoundOutput.SecondaryBufferSize;
+    DWORD TargetCursor = ((PlayCursor + (SoundOutput.LatencySampleCount * SoundOutput.BytesPerSample)) % SoundOutput.SecondaryBufferSize);
+    DWORD BytesToWrite;
+    if(ByteToLock > TargetCursor) {
+      BytesToWrite = SoundOutput.SecondaryBufferSize - ByteToLock;
+      BytesToWrite += TargetCursor;
+    } else {
+      BytesToWrite = TargetCursor - ByteToLock;
+    }
+    Win32FillSoundBuffer(&SoundOutput, ByteToLock, BytesToWrite);
+  }
+}
+
+void PlatformCloseSoundDevice(platform_sound_device *SoundDevice) {
+  if(SoundDevice) {
+    free(SoundDevice);
+  }
+}
+
 int WINAPI WinMain(
 		   HINSTANCE Instance,
 		   HINSTANCE PrevInstance,
 		   LPSTR     CmdLine,
 		   int       ShowCmd
 		   ) {
-  WNDCLASSA WindowClass = {};
+  platform_window *Window = PlatformOpenWindow(Instance,
+					       "Platform Layer",
+					       1280,
+					       720);
+  if(Window->Handle) {
+    
+    HDC DeviceContext = GetDC(Window->Handle);
+    
+    int XOffset = 0;
+    int YOffset = 0;
 
-  Win32ResizeDIBSection(&GlobalBackbuffer, 1280, 720);
-  
-  WindowClass.style = CS_HREDRAW|CS_VREDRAW|CS_OWNDC;
-  WindowClass.lpfnWndProc = Win32Wndproc;
-  WindowClass.hInstance = Instance;
-  WindowClass.lpszClassName = "WindowClass";
+    platform_sound_device *SoundOutput = PlatformOpenSoundDevice(256, Window);
 
-  if(RegisterClassA(&WindowClass)) {
-    HWND Window = CreateWindowExA(
-			     0,
-			     WindowClass.lpszClassName,
-			     "Platform Layer",
-			     WS_OVERLAPPEDWINDOW|WS_VISIBLE,
-			     CW_USEDEFAULT,
-			     CW_USEDEFAULT,
-			     CW_USEDEFAULT,
-			     CW_USEDEFAULT,
-			     0,
-			     0,
-			     Instance,
-			     0
-			     );
-    if(Window) {
-      
-      HDC DeviceContext = GetDC(Window);
-      
-      int XOffset = 0;
-      int YOffset = 0;
-
-      win32_sound_output SoundOutput = {};
-      SoundOutput.SamplesPerSecond = 40000;
-      SoundOutput.ToneHz = 256;
-      SoundOutput.ToneVolume = 200;
-      SoundOutput.RunningSampleIndex = 0;
-      SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz;
-      SoundOutput.BytesPerSample = sizeof(int16) * 2;
-      SoundOutput.SecondaryBufferSize = SoundOutput.SamplesPerSecond * SoundOutput.BytesPerSample;
-      SoundOutput.LatencySampleCount = SoundOutput.SamplesPerSecond / 15;
-      Win32InitDSound(Window, SoundOutput.SamplesPerSecond, SoundOutput.SecondaryBufferSize);
-      Win32FillSoundBuffer(&SoundOutput, 0, SoundOutput.SecondaryBufferSize);
-      GlobalSecondaryBuffer->Play(0, 0, DSBPLAY_LOOPING);
-
-      GlobalRunning = true;
-      while(GlobalRunning) {
-	MSG Message;
+    GlobalRunning = true;
+    while(GlobalRunning) {
+      MSG Message;
 	
-	// TODO: CHECK IF WINDOW OR 0
-	while(PeekMessageA(&Message, Window, 0, 0, PM_REMOVE)) { 
-	  if(Message.message == WM_QUIT) {
-	    GlobalRunning = false;
-	  }
+      // TODO: CHECK IF WINDOW OR 0
+      while(PeekMessageA(&Message, Window->Handle, 0, 0, PM_REMOVE)) { 
+	if(Message.message == WM_QUIT) {
+	  GlobalRunning = false;
+	}
 
-	  for(DWORD ControllerIndex = 0; ControllerIndex < XUSER_MAX_COUNT; ControllerIndex++) { 
-	    XINPUT_STATE ControllerState;
-	    ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
-
-	    if(XInputGetState(ControllerIndex, &ControllerState) == ERROR_SUCCESS) {
-	      // NOTE: Controller available
-	      // TODO: Check if its better creating a pointer to ControllerState.Gamepad
-	      XINPUT_GAMEPAD Pad = ControllerState.Gamepad;
+	for(DWORD ControllerIndex = 0; ControllerIndex < XUSER_MAX_COUNT; ControllerIndex++) { 
+	  XINPUT_STATE ControllerState;
+	  ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
+	  if(XInputGetState(ControllerIndex, &ControllerState) == ERROR_SUCCESS) {
+	    // NOTE: Controller available
+	    // TODO: Check if its better creating a pointer to ControllerState.Gamepad
+	    XINPUT_GAMEPAD Pad = ControllerState.Gamepad;
 	      
-	      real32 Up = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_UP);
-	      real32 Right = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
-	      real32 Down = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
-	      real32 Left = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
-	      real32 Start = (Pad.wButtons & XINPUT_GAMEPAD_START);
-	      real32 Back = (Pad.wButtons & XINPUT_GAMEPAD_BACK);
-	      real32 LeftShoulder = (Pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
-	      real32 RightShoulder = (Pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
-	      real32 AButton = (Pad.wButtons & XINPUT_GAMEPAD_A);
-	      real32 BButton = (Pad.wButtons & XINPUT_GAMEPAD_B);
-	      real32 XButton = (Pad.wButtons & XINPUT_GAMEPAD_X);
-	      real32 YButton = (Pad.wButtons & XINPUT_GAMEPAD_Y);
+	    real32 Up = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_UP);
+	    real32 Right = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
+	    real32 Down = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
+	    real32 Left = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
+	    real32 Start = (Pad.wButtons & XINPUT_GAMEPAD_START);
+	    real32 Back = (Pad.wButtons & XINPUT_GAMEPAD_BACK);
+	    real32 LeftShoulder = (Pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
+	    real32 RightShoulder = (Pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
+	    real32 AButton = (Pad.wButtons & XINPUT_GAMEPAD_A);
+	    real32 BButton = (Pad.wButtons & XINPUT_GAMEPAD_B);
+	    real32 XButton = (Pad.wButtons & XINPUT_GAMEPAD_X);
+	    real32 YButton = (Pad.wButtons & XINPUT_GAMEPAD_Y);
 
-	      int16 ThumbX = Pad.sThumbLX;
-	      int16 ThumbY = Pad.sThumbLY;
+	    int16 ThumbX = Pad.sThumbLX;
+	    int16 ThumbY = Pad.sThumbLY;
 	      
-	      YOffset += ThumbY / 4096;
-	      XOffset += ThumbX / 4096;;
+	    YOffset += ThumbY / 4096;
+	    XOffset += ThumbX / 4096;;
 
-	      SoundOutput.ToneHz = 512 + (int)(256.0f*((real32)ThumbY / 30000.0f));
-	      SoundOutput.WavePeriod = SoundOutput.SamplesPerSecond / SoundOutput.ToneHz;
+	    SoundOutput->Handle.ToneHz = 512 + (int)(256.0f*((real32)ThumbY / 30000.0f));
+	    SoundOutput->Handle.WavePeriod = SoundOutput->Handle.SamplesPerSecond / SoundOutput->Handle.ToneHz;
 	      
-	    } else {
-	      // TODO: Controller not available
-	    }
-	  }
-	  
-	  TranslateMessage(&Message);
-	  DispatchMessage(&Message);
-
-	  DWORD PlayCursor;
-	  DWORD WriteCursor;
-	  if(SUCCEEDED(GlobalSecondaryBuffer->GetCurrentPosition(&PlayCursor,
-								 &WriteCursor))) {
-	    DWORD ByteToLock = (SoundOutput.RunningSampleIndex * SoundOutput.BytesPerSample) % SoundOutput.SecondaryBufferSize;
-	    DWORD TargetCursor = ((PlayCursor + (SoundOutput.LatencySampleCount * SoundOutput.BytesPerSample)) % SoundOutput.SecondaryBufferSize);
-	    DWORD BytesToWrite;
-	    if(ByteToLock > TargetCursor) {
-	      BytesToWrite = SoundOutput.SecondaryBufferSize - ByteToLock;
-	      BytesToWrite += TargetCursor;
-	    } else {
-	      BytesToWrite = TargetCursor - ByteToLock;
-	    }
-	    Win32FillSoundBuffer(&SoundOutput, ByteToLock, BytesToWrite);
+	  } else {
+	    // TODO: Controller not available
 	  }
 	}
-	win32_window_dimension Dimension = Win32GetWindowDimension(Window);
-	Win32DisplayBufferInWindow(&GlobalBackbuffer, DeviceContext, Dimension.Width, Dimension.Height);
-	RenderGradient(GlobalBackbuffer, XOffset, YOffset);
-	++XOffset;
-	++YOffset;
+	  
+	TranslateMessage(&Message);
+	DispatchMessage(&Message);
+
+	PlatformPlaySoundDevice(SoundOutput->Handle);
       }
+      win32_window_dimension Dimension = Win32GetWindowDimension(Window->Handle);
+      Win32DisplayBufferInWindow(&GlobalBackbuffer, DeviceContext, Dimension.Width, Dimension.Height);
+      RenderGradient(GlobalBackbuffer, XOffset, YOffset);
+      ++XOffset;
+      ++YOffset;
     }
+    PlatformCloseSoundDevice(SoundOutput);
+    PlatformCloseWindow(Window);
   }
-  
+
   return 0;
 }
+

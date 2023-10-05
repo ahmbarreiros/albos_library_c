@@ -1,13 +1,12 @@
 /*
 
-Albos library - Personal C library for Antônio H. M. Barreiros
+  Albos library - Personal C library for Antônio H. M. Barreiros
 
-functions are snake_case
-variables are camelCase
-types are PascalCase
-constants are UPPERCASE
-macros are ALL_CAPS
-parameters are camelCase  
+  functions are PascalCase
+  variables are PascalCase
+  types are PascalCase
+  constants are UPPERCASE
+  parameters are PascalCase  
 
 */
 
@@ -18,73 +17,58 @@ parameters are camelCase
 #define DOUBLE_INF 1.0e8
 
 /* BASIC OPERATIONS */
-extern long abs_i(long x);
+extern long Abs_i(long x);
 
-extern double abs_f(double x);
+extern double Abs_f(double x);
 
-extern int max_i(int x, int y);
+extern int Max_i(int x, int y);
 
-extern int min_i(int x, int y);
+extern int Min_i(int x, int y);
 
-extern float max_arr_f(float* values, int size);
+extern float MaxArr_f(float* Values, int Size);
 
-extern int max_arr_i(int* values, int size);
+extern int MaxArr_i(int* Values, int Size);
 
-extern double pow_f(float base, int exponent);
+extern double Pow_f(float Base, int Exponent);
 
-extern long pow_i(int base, int exponent);
+extern long Pow_i(int Base, int Exponent);
 
-extern long sum_i(int* values, int size);
+extern long Sum_i(int* Values, int Size);
 
-extern double sum_f(float* values, int size);
+extern double Sum_f(float* Values, int Size);
 
 /* ERROR CALCULATIONS */
 
-extern float absolute_error(float value, float approximateValue);
+extern float AbsoluteError(float Value, float ApproximateValue);
 
-extern double relative_error(float value, float approximateValue);
+extern double RelativeError(float Value, float ApproximateValue);
 
-extern double relative_error_ea(float value, float absoluteError);
+extern double RelativeErrorEA(float Value, float AbsoluteError);
 
-extern int compare_error(double error1, double error2);
+extern int CompareError(double Error1, double Error2);
 
 /* VECTOR AND MATRICES NORMS */
 
-extern float euclidean_norm_f(float* values, int size);
+extern float EuclideanNorm(float* Values, int Size);
 
-extern long euclidean_norm_i(int* values, int size);
+extern float EuclideanNormDistance(float* ValuesVectorA, int SizeVectorA,
+				   float* ValuesVectorB, int SizeVectorB);
 
+extern float MaximumNorm(float* Values, int Size);
 
-extern float euclidean_norm_distance_f(float* valuesVectorA, int sizeVectorA,
-				       float* valuesVectorB, int sizeVectorB);
+extern float MaximumNormDistance(float* ValuesVectorA, int SizeVectorA,
+				 float* ValuesVectorB, int SizeVectorB);
 
-extern float maximum_norm_f(float* values, int size);
+extern float SumNorm(float* Values, int Size);
 
+extern float SumNormDistance(float* ValuesVectorA, int SizeVectorA,
+			     float* ValuesVectorB, int SizeVectorB);
 
-extern int maximum_norm_i(int* values, int size);
+extern float FrobeniusNorm(float* Values, int SizeRows, int SizeColumns);
 
+extern float RowMaximumNorm(float** Values, int SizeRows, int SizeColumns);
 
-extern float maximum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
-				     float* valuesVectorB, int sizeVectorB);
-extern float sum_norm_f(float* values, int size);
-
-extern long sum_norm_i(int* values, int size);
-
-
-extern float sum_norm_distance_f(float* valuesVectorA, int sizeVectorA,
-				 float* valuesVectorB, int sizeVectorB);
-
-extern float frobenius_norm_f(float* values, int sizeRows, int sizeColumns);
-
-extern long frobenius_norm_i(int* values, int sizeRows, int sizeColumns);
-
-extern float row_maximum_norm_f(float** values, int sizeRows, int sizeColumns);
-
-extern long row_maximum_norm_i(int** values, int sizeRows, int sizeColumns);
-
-extern float column_maximum_norm_f(float* values[], int sizeRows, int sizeColumns);
-
-extern long column_maximum_norm_i(int** values, int sizeRows, int sizeColumns);
+extern float ColumnMaximumNorm(float* Values[], int SizeRows, int SizeColumns);
 
 extern float* gauss_elimination(float* mat, int sizeRows, int sizeColumns);
 

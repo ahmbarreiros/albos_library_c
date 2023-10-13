@@ -587,7 +587,7 @@ void gauss_resolution(float* mat, int sizeRows, int sizeColumns) {
 double fint(float x) {
   // FUNCTION f(x) in Zf(x)dx. Change this as necessary
   //  ((float)1.0 / pow_f(x, 3))
-  return exp(x);
+  return x;
 }
 
 double simpsons13(float inferior_limit, float superior_limit, unsigned long n) {
@@ -623,3 +623,33 @@ double simpsons13(float inferior_limit, float superior_limit, unsigned long n) {
   return result;
 }
 
+
+double limit(int n) {
+  float TermsToInfinity[11];
+  for(int i = n-11; i < n; i++) {
+    float value = fint(i);
+    if(value >= 1e8) {
+      return 1e8;
+    } else {
+      TermsToInfinity[i] = value;
+    }
+  }
+  int hasLimit = 1;
+  int divergent = 0;
+  for(int x = n-11; x < n; x++) {
+    if((int)TermsToInfinity[x] != (int)TermsToInfinity[n-1]) {
+      divergent = (int)TermsToInfinity[x];
+      hasLimit = 0;
+    }
+  }
+  float rounded = TermsToInfinity[n-1];
+  if(!hasLimit) {
+    if(TermsToInfinity[n-1] >= 1e5) {
+      return 1e8;
+    } else {
+      return -1;
+    }
+  } else {
+    return rounded;
+  }
+}

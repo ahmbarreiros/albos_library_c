@@ -77,3 +77,5 @@ extern void gauss_resolution(float* mat, int sizeRows, int sizeColumns);
 extern double fint(float x);
 
 extern double simpsons13(float inferior_limit, float superior_limit, unsigned long n);
+
+extern double limit(int n);

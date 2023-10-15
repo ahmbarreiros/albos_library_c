@@ -498,7 +498,10 @@ int WINAPI WinMain(
 	if(Message.message == WM_QUIT) {
 	  GlobalRunning = false;
 	}
-
+	TranslateMessage(&Message);
+	DispatchMessage(&Message);
+      }
+	
 	for(DWORD ControllerIndex = 0; ControllerIndex < XUSER_MAX_COUNT; ControllerIndex++) { 
 	  XINPUT_STATE ControllerState;
 	  ZeroMemory(&ControllerState, sizeof(XINPUT_STATE));
@@ -534,8 +537,7 @@ int WINAPI WinMain(
 	  }
 	}
 	  
-	TranslateMessage(&Message);
-	DispatchMessage(&Message);
+	
 
 	PlatformPlaySoundDevice(SoundOutput->Handle);
       }
@@ -544,10 +546,10 @@ int WINAPI WinMain(
       RenderGradient(GlobalBackbuffer, XOffset, YOffset);
       ++XOffset;
       ++YOffset;
+      PlatformCloseSoundDevice(SoundOutput);
+      PlatformCloseWindow(Window);
     }
-    PlatformCloseSoundDevice(SoundOutput);
-    PlatformCloseWindow(Window);
-  }
+
 
   return 0;
 }

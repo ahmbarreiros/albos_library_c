@@ -1,4 +1,4 @@
-#if !defined(PLATFORM_H)
+#if !defined(ALBOS_PLATFORM_H)
 
 typedef struct platform_window platform_window;
 platform_window *PlatformOpenWindow(char* Title,
@@ -11,5 +11,5 @@ platform_sound_device *PlatformOpenSoundDevice(int Volume, platform_window *Wind
 void PlatformPlaySoundDevice();
 void PlatformCloseSoundDevice(platform_sound_device *SoundDevice);
 
-#define PLATFORM_H
+#define ALBOS_PLATFORM_H
 #endif

@@ -1,2 +1,7 @@
 *.exe
-build/
+albos_game_engine/build/
+albos_game_engine/misc/
+*.sln
+*.ilk
+*.obj
+*.pdb

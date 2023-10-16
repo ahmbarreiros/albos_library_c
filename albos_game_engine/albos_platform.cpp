@@ -34,9 +34,10 @@ internal void GameUpdateAndRender(game_offscreen_buffer *BitMapBuffer,
 				  game_sound_ouput_buffer *SoundBuffer) {
   local_persist int BlueOffset = 0;
   local_persist int GreenOffset = 0;
+  local_persist int ToneHz = 256;
   RenderGradient(BitMapBuffer, BlueOffset, GreenOffset);
   ++BlueOffset;
   ++GreenOffset;
-  GameOutputSound(SoundBuffer, 256);
+  GameOutputSound(SoundBuffer, ToneHz);
 }
 

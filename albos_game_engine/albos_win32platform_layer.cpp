@@ -445,7 +445,7 @@ typedef struct platform_sound_device {
 
 typedef struct platform_input_device {
   XINPUT_STATE Handle;
-}
+} platform_input_device;
 
 platform_sound_device* PlatformOpenSoundDevice(platform_window *Window) {
   platform_sound_device *Result = (platform_sound_device*)malloc(sizeof(platform_sound_device));
@@ -484,6 +484,20 @@ platform_input_device *PlatformOpenInputDevice() {
   return Result;
 }
 
+void PlatformCloseInput(platform_input_device *InputDevice) {
+  if(InputDevice) {
+    free(InputDevice);
+  }
+}
+
+internal void Win32ProccessXInputDigitalButton(DWORD XInputButtonState,
+					       game_button_state *OldState,
+					       DWORD ButtonBit,
+					       game_button_state *NewState) {
+  NewState->EndedDown = ((XInputButtonState & ButtonBit) == ButtonBit);
+  NewState->HalfTransitionCount = (OldState->EndedDown != NewState->EndedDown) ? 1 : 0;
+}
+
 int WINAPI WinMain(
 		   HINSTANCE Instance,
 		   HINSTANCE PrevInstance,
@@ -502,9 +516,13 @@ int WINAPI WinMain(
 					   40000*2*sizeof(int16),
 					   MEM_COMMIT|MEM_RESERVE,
 					   PAGE_READWRITE);
-
+    game_input Input[2] = {};
+    game_input *NewInput = &Input[0];
+    game_input *OldInput = &Input[1];
+    
+    platform_input_device* InputDevice = PlatformOpenInputDevice();
+    
     GlobalRunning = true;
-
     while(GlobalRunning) {
       MSG Message;
 	
@@ -516,78 +534,130 @@ int WINAPI WinMain(
 	TranslateMessage(&Message);
 	DispatchMessage(&Message);
       }
-	
-	for(DWORD ControllerIndex = 0; ControllerIndex < XUSER_MAX_COUNT; ControllerIndex++) { 
-	  platform_input_device* InputDevice = PlatformOpenInputDevice();
-	  if(XInputGetState(ControllerIndex, &InputDevice->Handle) == ERROR_SUCCESS) {
-	    // NOTE: Controller available
-	    // TODO: Check if its better creating a pointer to ControllerState.Gamepad
-	    XINPUT_GAMEPAD Pad = ControllerState.Gamepad;
-	      
-	    real32 Up = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_UP);
-	    real32 Right = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
-	    real32 Down = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
-	    real32 Left = (Pad.wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
-	    real32 Start = (Pad.wButtons & XINPUT_GAMEPAD_START);
-	    real32 Back = (Pad.wButtons & XINPUT_GAMEPAD_BACK);
-	    real32 LeftShoulder = (Pad.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER);
-	    real32 RightShoulder = (Pad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER);
-	    real32 AButton = (Pad.wButtons & XINPUT_GAMEPAD_A);
-	    real32 BButton = (Pad.wButtons & XINPUT_GAMEPAD_B);
-	    real32 XButton = (Pad.wButtons & XINPUT_GAMEPAD_X);
-	    real32 YButton = (Pad.wButtons & XINPUT_GAMEPAD_Y);
 
-	    int16 ThumbX = Pad.sThumbLX;
-	    int16 ThumbY = Pad.sThumbLY;	    
-	  } else {
-	    // TODO: Controller not available
-	  }
-	}
-	DWORD PlayCursor = 0;
-	DWORD WriteCursor = 0;
-	DWORD BytesToWrite = 0;
-	DWORD ByteToLock = 0;
-	DWORD TargetCursor = 0;
-	bool32 SoundIsValid = false;
-	if(SUCCEEDED(GlobalSecondaryBuffer->GetCurrentPosition(&PlayCursor,
-							       &WriteCursor))) {
-	  ByteToLock = (SoundDevice->Handle.RunningSampleIndex * SoundDevice->Handle.BytesPerSample) % SoundDevice->Handle.SecondaryBufferSize;
-	  TargetCursor = ((PlayCursor + (SoundDevice->Handle.LatencySampleCount * SoundDevice->Handle.BytesPerSample)) % SoundDevice->Handle.SecondaryBufferSize);
-    
-	  if(ByteToLock > TargetCursor) {
-	    BytesToWrite = SoundDevice->Handle.SecondaryBufferSize - ByteToLock;
-	    BytesToWrite += TargetCursor;
-	  } else {
-	    BytesToWrite = TargetCursor - ByteToLock;
-	  }
-	  SoundIsValid = true;
-	}
-
-	SoundDevice->ByteToLock = ByteToLock;
-	SoundDevice->BytesToWrite = BytesToWrite;
-	SoundDevice->Buffer.SampleCount = SoundDevice->BytesToWrite / SoundDevice->Handle.BytesPerSample;
-	SoundDevice->Buffer.Samples = Samples;
-	SoundDevice->Buffer.SamplesPerSecond = SoundDevice->Handle.SamplesPerSecond;
-	
-	game_offscreen_buffer BitMapBuffer = {};
-	BitMapBuffer.Memory = GlobalBackbuffer.Memory;
-	BitMapBuffer.Width = GlobalBackbuffer.Width;
-	BitMapBuffer.Height = GlobalBackbuffer.Height;
-	BitMapBuffer.Pitch = GlobalBackbuffer.Pitch;
-
-	GameUpdateAndRender(&BitMapBuffer, &SoundDevice->Buffer);
-
-	// TODO: Sound is with a little bit of delay when tabbing?
-	if(SoundIsValid) {
-	  PlatformPlaySoundDevice(SoundDevice);
-	}
-
-	
-       	win32_window_dimension Dimension = Win32GetWindowDimension(Window->Handle);
-	Win32DisplayBufferInWindow(&GlobalBackbuffer, DeviceContext, Dimension.Width, Dimension.Height);
+      int MaxControllerCount = XUSER_MAX_COUNT;
+      if(MaxControllerCount > ArrayCount(NewInput->Controllers)) {
+	MaxControllerCount = ArrayCount(NewInput->Controllers);
       }
+      for(DWORD ControllerIndex = 0; ControllerIndex < MaxControllerCount; ControllerIndex++) {
+	game_controller_input *OldController = &OldInput->Controllers[ControllerIndex];
+	game_controller_input *NewController = &NewInput->Controllers[ControllerIndex];
+
+	ZeroMemory(&InputDevice->Handle, sizeof(XINPUT_STATE));
+
+	if(XInputGetState(ControllerIndex, &InputDevice->Handle) == ERROR_SUCCESS) {
+	  // NOTE: Controller available
+	  // TODO: Check if its better creating a pointer to ControllerState.Gamepad
+	  XINPUT_GAMEPAD *Pad = &InputDevice->Handle.Gamepad;
+	      
+	  real32 Up = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_UP);
+	  real32 Right = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_RIGHT);
+	  real32 Down = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_DOWN);
+	  real32 Left = (Pad->wButtons & XINPUT_GAMEPAD_DPAD_LEFT);
+
+	  NewController->IsAnalog = true;
+	  NewController->StartX = OldController->EndX;
+	  NewController->StartY = OldController->EndY;
+	  
+	  real32 X;
+	  if(Pad->sThumbLX < 0) {
+	    X = (real32)Pad->sThumbLX / 32768.0f;
+	  } else {
+	    X = (real32)Pad->sThumbLX / 32767.0f;
+	  }
+	  NewController->MinX = NewController->MaxX = NewController->EndX = X;
+
+	  real32 Y;
+	  if(Pad->sThumbLY < 0) {
+	    Y = (real32)Pad->sThumbLY / 32768.0f;
+	  } else {
+	    Y = (real32)Pad->sThumbLY / 32767.0f;
+	  }
+	  NewController->MinY = NewController->MaxY = NewController->EndY = Y;
+
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->LeftShoulder,
+					   XINPUT_GAMEPAD_LEFT_SHOULDER,
+					   &NewController->LeftShoulder);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->RightShoulder,
+					   XINPUT_GAMEPAD_RIGHT_SHOULDER,
+					   &NewController->RightShoulder);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->Down,
+					   XINPUT_GAMEPAD_A,
+					   &NewController->Down);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->Left,
+					   XINPUT_GAMEPAD_B,
+					   &NewController->Left);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->Right,
+					   XINPUT_GAMEPAD_X,
+					   &NewController->Right);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->Up,
+					   XINPUT_GAMEPAD_Y,
+					   &NewController->Up);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->Start,
+					   XINPUT_GAMEPAD_START,
+					   &NewController->Start);
+	  Win32ProccessXInputDigitalButton(Pad->wButtons,
+					   &OldController->Back,
+					   XINPUT_GAMEPAD_BACK,
+					   &NewController->Back);
+
+	} else {
+	  // TODO: Controller not available
+	}
+      }
+      DWORD PlayCursor = 0;
+      DWORD WriteCursor = 0;
+      DWORD BytesToWrite = 0;
+      DWORD ByteToLock = 0;
+      DWORD TargetCursor = 0;
+      bool32 SoundIsValid = false;
+      if(SUCCEEDED(GlobalSecondaryBuffer->GetCurrentPosition(&PlayCursor,
+							     &WriteCursor))) {
+	ByteToLock = (SoundDevice->Handle.RunningSampleIndex * SoundDevice->Handle.BytesPerSample) % SoundDevice->Handle.SecondaryBufferSize;
+	TargetCursor = ((PlayCursor + (SoundDevice->Handle.LatencySampleCount * SoundDevice->Handle.BytesPerSample)) % SoundDevice->Handle.SecondaryBufferSize);
+    
+	if(ByteToLock > TargetCursor) {
+	  BytesToWrite = SoundDevice->Handle.SecondaryBufferSize - ByteToLock;
+	  BytesToWrite += TargetCursor;
+	} else {
+	  BytesToWrite = TargetCursor - ByteToLock;
+	}
+	SoundIsValid = true;
+      }
+
+      SoundDevice->ByteToLock = ByteToLock;
+      SoundDevice->BytesToWrite = BytesToWrite;
+      SoundDevice->Buffer.SampleCount = SoundDevice->BytesToWrite / SoundDevice->Handle.BytesPerSample;
+      SoundDevice->Buffer.Samples = Samples;
+      SoundDevice->Buffer.SamplesPerSecond = SoundDevice->Handle.SamplesPerSecond;
+	
+      game_offscreen_buffer BitMapBuffer = {};
+      BitMapBuffer.Memory = GlobalBackbuffer.Memory;
+      BitMapBuffer.Width = GlobalBackbuffer.Width;
+      BitMapBuffer.Height = GlobalBackbuffer.Height;
+      BitMapBuffer.Pitch = GlobalBackbuffer.Pitch;
+
+      GameUpdateAndRender(NewInput, &BitMapBuffer, &SoundDevice->Buffer);
+
+      // TODO: Sound is with a little bit of delay when tabbing?
+      if(SoundIsValid) {
+	PlatformPlaySoundDevice(SoundDevice);
+      }
+
+	
+      win32_window_dimension Dimension = Win32GetWindowDimension(Window->Handle);
+      Win32DisplayBufferInWindow(&GlobalBackbuffer, DeviceContext, Dimension.Width, Dimension.Height);
+    }
     PlatformCloseSoundDevice(SoundDevice);
     PlatformCloseWindow(Window);
+    PlatformCloseInput(InputDevice);
   }
   
 

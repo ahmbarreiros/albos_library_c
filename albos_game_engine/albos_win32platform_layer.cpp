@@ -61,38 +61,15 @@ global_variable x_input_set_state *XInputSetState_ = XInputSetStateStub;
 #define DIRECT_SOUND_CREATE(name) HRESULT WINAPI name(LPCGUID pcGuidDevice, LPDIRECTSOUND *ppDS, LPUNKNOWN pUnkOuter)
 typedef DIRECT_SOUND_CREATE(direct_sound_create);
 
-
-struct win32_backbuffer {
-  BITMAPINFO Info;
-  void* Memory;
-  int Width;
-  int Height;
-  int BytesPerPixel;
-  int Pitch;
-};
-
-
-struct win32_window_dimension {
-  int Width;
-  int Height;
-};
-
-
-struct win32_sound_output {
-  int SamplesPerSecond;
-  uint32 RunningSampleIndex;
-  int WavePeriod;
-  int BytesPerSample;
-  int SecondaryBufferSize;
-  real32 tSine;
-  int LatencySampleCount;
-};
+#include "albos_win32platform_layer.h"
 
 // NOTE: Váriaveis globais 
 global_variable real32 GlobalRunning;
 global_variable HINSTANCE GlobalInstance;
 global_variable win32_backbuffer GlobalBackbuffer;
 global_variable LPDIRECTSOUNDBUFFER GlobalSecondaryBuffer;
+
+
 
 internal void Win32LoadXInput() {
 
@@ -390,10 +367,6 @@ internal void Win32ClearBuffer(win32_sound_output *SoundOutput) {
   }
 }
 
-struct platform_window {
-  HWND Handle;
-};
-typedef struct platform_window platform_window;
 
 platform_window* PlatformOpenWindow(char* Title,
 				    int Width,
@@ -435,17 +408,6 @@ void PlatformCloseWindow(platform_window *Window) {
     free(Window);
   }
 }
-
-typedef struct platform_sound_device {
-  win32_sound_output Handle;
-  game_sound_ouput_buffer Buffer;
-  DWORD ByteToLock;
-  DWORD BytesToWrite;
-} platform_sound_device;
-
-typedef struct platform_input_device {
-  XINPUT_STATE Handle;
-} platform_input_device;
 
 platform_sound_device* PlatformOpenSoundDevice(platform_window *Window) {
   platform_sound_device *Result = (platform_sound_device*)malloc(sizeof(platform_sound_device));

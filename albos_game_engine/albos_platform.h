@@ -15,6 +15,10 @@ struct game_offscreen_buffer {
 };
 
 
+struct game_button_state {
+  
+}
+
 
 typedef struct platform_window platform_window;
 platform_window *PlatformOpenWindow(char* Title,
@@ -26,6 +30,9 @@ typedef struct platform_sound_device platform_sound_device;
 platform_sound_device *PlatformOpenSoundDevice(platform_window *Window, int Volume);
 void PlatformPlaySoundDevice();
 void PlatformCloseSoundDevice(platform_sound_device *SoundDevice);
+
+typedef struct platform_input_device platform_input_device;
+
 
 internal void GameUpdateAndRender(game_offscreen_buffer *BitMapBuffer,
 				  game_sound_ouput_buffer *SoundBuffer);

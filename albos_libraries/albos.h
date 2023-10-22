@@ -9,7 +9,7 @@
   parameters are PascalCase  
 
 */
-
+#include "albos_math.h"
 #include <stdio.h>
 
 #define INF_FLOAT (1 << (sizeof(double))) + 1
@@ -17,13 +17,13 @@
 #define DOUBLE_INF 1.0e8
 
 /* BASIC OPERATIONS */
-extern long Abs_i(long x);
+//extern long Abs_i(long x);
 
-extern double Abs_f(double x);
+//extern double Abs_f(double x);
 
-extern int Max_i(int x, int y);
+//extern int Max_i(int x, int y);
 
-extern int Min_i(int x, int y);
+//extern int Min_i(int x, int y);
 
 extern float MaxArr_f(float* Values, int Size);
 

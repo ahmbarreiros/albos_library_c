@@ -24,7 +24,10 @@ int main() {
   // double result = simpsons13(InferiorLimit, SuperiorLimit, 10);
   // printf("result: %f\n", result);
 
-  double res = limit(1e6);
-  printf("result: %f\n", res);
+  //double res = limit(1e6);
+  //printf("result: %f\n", res);
+  printf("%d\n", Abs((10 - 11)));
+  printf("%d\n", Max(10, 11));
+  printf("%d\n", Min(10, 11));
  return 0;
 }

@@ -36,14 +36,13 @@
  * @return (long) Integer "x" that represents the absolute value of parameter "x".
  *
  * @warning This function is for integer values only; for floats, check reference.
- * @see Abs_f() for floating point values.
+ * @see Abs() for floating point values.
  */
-long Abs_i(long x) {
+// long Abs(long x) {
   
-  if(x >= 0) return x;
-  else return -x; 
-}
-
+//   if(x >= 0) return x;
+//   else return -x; 
+// }
 
 /**
  * @brief Return the absolute value of a floating point number.
@@ -55,12 +54,12 @@ long Abs_i(long x) {
  * @return (double) Double value "x" that represents the absolute value of parameter "x".
  *
  * @warning This function is for floating values only; for integers, check reference.
- * @see Abs_i() for integer values.
+ * @see Abs() for integer values.
  */
-double Abs_f(double x) {
-  if(x >= 0) return x;
-  else return -x;
-}
+// double Abs(double x) {
+//   if(x >= 0) return x;
+//   else return -x;
+// }
 
 
 /**
@@ -71,12 +70,12 @@ double Abs_f(double x) {
  * @return (int) Compares parameters "x" and "y", and returns the biggest value between them.
  *
  * @warning This function is for integer values only; for floats, check reference.
- * @see Min_i() for smallest comparison.
+ * @see Min() for smallest comparison.
  */
-int Max_i(int x, int y) {
-  if(x > y) return x;
-  else return y;
-}
+// int Max(int x, int y) {
+//   if(x > y) return x;
+//   else return y;
+// }
 
 
 /**
@@ -87,13 +86,12 @@ int Max_i(int x, int y) {
  * @return (int) Compares parameters "x" and "y", and returns the smallest value between them.
  *
  * @warning This function is for integer values only; for floats, check reference.
- * @see Max_i() for biggest comparison.
+ * @see Max() for biggest comparison.
  */
-int Min_i(int x, int y) {
-  if(x <= y) return x;
-  else return y;
-}
-
+// int Min(int x, int y) {
+//   if(x <= y) return x;
+//   else return y;
+// }
 
 /**
  * @brief Calculates the maximum value of a float array.
@@ -161,7 +159,7 @@ long Pow_i(int Base, int Exponent) {
   if(Exponent == 0) return 1;
   if(Exponent < 0) {
    isNegative = 1;
-   Exponent = Abs_i(Exponent);
+   Exponent = Abs(Exponent);
   }
   if(Exponent == 1) return Base;
   else if(Exponent == 2) return (Base*Base);
@@ -196,7 +194,7 @@ double Pow_f(float Base, int Exponent) {
   if(Exponent == 0) return 1;
   if(Exponent < 0) {
    isNegative = 1;
-   Exponent = Abs_i(Exponent);
+   Exponent = Abs(Exponent);
   }
   if(Exponent == 1) return Base;
   else if(Exponent == 2) return (Base*Base);
@@ -274,7 +272,7 @@ double Sum_f(float* Arr, int Size) {
  * @see CompareError()    for comparing two errors.
  */
 float AbsoluteError(float Value, float ApproximateValue) {
-  return Abs_f(Value - ApproximateValue);
+  return Abs(Value - ApproximateValue);
 }
 
 
@@ -391,8 +389,8 @@ float EuclideanNorm(float* Values, int Size) {
 float EuclideanNormDistance(float* ValuesVectorA, int SizeVectorA,
 			    float* ValuesVectorB, int SizeVectorB) {
   float Sum = 0.0;
-  int Biggest = Max_i(SizeVectorA, SizeVectorB);
-  int Smallest = Min_i(SizeVectorA, SizeVectorB);
+  int Biggest = Max(SizeVectorA, SizeVectorB);
+  int Smallest = Min(SizeVectorA, SizeVectorB);
   for(int i = 0; i < Biggest; i++) {
     if(i <= Smallest) {
       Sum += Pow_f((ValuesVectorA[i] - ValuesVectorB[i]), 2);
@@ -409,8 +407,8 @@ float EuclideanNormDistance(float* ValuesVectorA, int SizeVectorA,
 float MaximumNorm(float* Values, int Size) { 
   float Max = -INF_FLOAT;
   for(int i = 0; i < Size; i++) {
-    if(Max < Abs_f(Values[i])) {
-      Max = Abs_f(Values[i]);
+    if(Max < Abs(Values[i])) {
+      Max = Abs(Values[i]);
     }
   }
   if(Max != -INF_FLOAT) return Max;
@@ -420,17 +418,17 @@ float MaximumNorm(float* Values, int Size) {
 float MaximumNormDistance(float* ValuesVectorA, int SizeVectorA,
 			  float* ValuesVectorB, int SizeVectorB) {
   float Max = -INF_FLOAT;
-  int Biggest = Max_i(SizeVectorA, SizeVectorB);
-  int Smallest = Min_i(SizeVectorA, SizeVectorB);
+  int Biggest = Max(SizeVectorA, SizeVectorB);
+  int Smallest = Min(SizeVectorA, SizeVectorB);
   float CurrentValue = 0.0;
   for(int i = 0; i < Biggest; i++) {
     CurrentValue = 0.0;
     if(i <= Smallest) {
-      CurrentValue = Abs_f(ValuesVectorA[i] - ValuesVectorB[i]);
+      CurrentValue = Abs(ValuesVectorA[i] - ValuesVectorB[i]);
     } else if(Smallest == SizeVectorA) {
-	CurrentValue = Abs_f(ValuesVectorA[i]);
+	CurrentValue = Abs(ValuesVectorA[i]);
     } else if(Smallest == SizeVectorB){
-	CurrentValue = Abs_f(ValuesVectorB[i]);
+	CurrentValue = Abs(ValuesVectorB[i]);
     }
     if(CurrentValue > Max) {
       Max = CurrentValue;
@@ -443,7 +441,7 @@ float MaximumNormDistance(float* ValuesVectorA, int SizeVectorA,
 float SumNorm(float* Values, int Size) {  
   float Sum = 0.0;
   for(int i = 0; i < Size; i++) {
-    Sum += Abs_f(Values[i]);
+    Sum += Abs(Values[i]);
   }
   return Sum;
 }
@@ -451,15 +449,15 @@ float SumNorm(float* Values, int Size) {
 float SumNormDistance(float* ValuesVectorA, int SizeVectorA,
 		      float* ValuesVectorB, int SizeVectorB) {  
   float Sum = 0.0;
-  int Biggest = Max_i(SizeVectorA, SizeVectorB);
-  int Smallest = Min_i(SizeVectorA, SizeVectorB);
+  int Biggest = Max(SizeVectorA, SizeVectorB);
+  int Smallest = Min(SizeVectorA, SizeVectorB);
   for(int i = 0; i < Biggest; i++) {
     if(i <= Smallest) {
-      Sum += Abs_f(ValuesVectorA[i] - ValuesVectorB[i]);
+      Sum += Abs(ValuesVectorA[i] - ValuesVectorB[i]);
     } else if(Smallest == SizeVectorA) {
-      Sum += Abs_f(ValuesVectorA[i]);
+      Sum += Abs(ValuesVectorA[i]);
     } else if(Smallest == SizeVectorB) {
-      Sum += Abs_f(ValuesVectorB[i]);
+      Sum += Abs(ValuesVectorB[i]);
     }
   }
   return Sum;
@@ -483,7 +481,7 @@ float RowMaximumNorm(float** Values, int SizeRows, int SizeColumns) {
   for(int i = 0; i < SizeRows; i++) {
     Sum = 0.0;
     for(int j = 0; j < SizeColumns; j++) {
-      Sum += Abs_f(Values[i][j]);
+      Sum += Abs(Values[i][j]);
     }
     if(MaxSum < Sum) {
       MaxSum = Sum;
@@ -498,7 +496,7 @@ float ColumnMaximumNorm(float* Values[], int SizeRows, int SizeColumns) {
   for(int j = 0; j < SizeColumns ; j++) {
     Sum = 0.0;
     for(int i = 0; i < SizeRows; i++) {
-      Sum += Abs_f(Values[i][j]);
+      Sum += Abs(Values[i][j]);
     }
     if(MaxSum < Sum) {
       MaxSum = Sum;
